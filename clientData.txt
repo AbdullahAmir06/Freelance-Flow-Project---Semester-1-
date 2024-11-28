@@ -1,0 +1,10 @@
+AlexCarter,Alex@123,1123,I want help  to learn AI Course;AI Learning;599|Machine Learner Needed;Machine Learning;200|youtube channel seo checker needed;SEO Optimization;100|kj;AI Learning;10|dnlad;AI Learning;15,1;empty|1;empty|1;empty|1;empty|2;SophiaWalker,AlexCarter;Nice App
+EmilyTurner,Emily@234,0,empty;empty;0|empty;empty;0|empty;empty;0|empty;empty;0|empty;empty;0,0;empty|0;empty|0;empty|0;empty|0;empty,empty;empty
+MarkParker,Mark@345,0,empty;empty;0|empty;empty;0|empty;empty;0|empty;empty;0|empty;empty;0,0;empty|0;empty|0;empty|0;empty|0;empty,empty;empty
+LindaHarris,Linda@456,0,empty;empty;0|empty;empty;0|empty;empty;0|empty;empty;0|empty;empty;0,0;empty|0;empty|0;empty|0;empty|0;empty,empty;empty
+JamesThompson,James@567,0,empty;empty;0|empty;empty;0|empty;empty;0|empty;empty;0|empty;empty;0,0;empty|0;empty|0;empty|0;empty|0;empty,empty;empty
+LisaGarcia,Lisa@678,0,empty;empty;0|empty;empty;0|empty;empty;0|empty;empty;0|empty;empty;0,0;empty|0;empty|0;empty|0;empty|0;empty,empty;empty
+PaulMartin,Paul@789,0,empty;empty;0|empty;empty;0|empty;empty;0|empty;empty;0|empty;empty;0,0;empty|0;empty|0;empty|0;empty|0;empty,empty;empty
+Jessica@890,JessicaLee,0,empty;empty;0|empty;empty;0|empty;empty;0|empty;empty;0|empty;empty;0,0;empty|0;empty|0;empty|0;empty|0;empty,empty;empty
+DavidWilson,David@901,0,empty;empty;0|empty;empty;0|empty;empty;0|empty;empty;0|empty;empty;0,0;empty|0;empty|0;empty|0;empty|0;empty,empty;empty
+RachelMoore,Rachel@012,0,empty;empty;0|empty;empty;0|empty;empty;0|empty;empty;0|empty;empty;0,0;empty|0;empty|0;empty|0;empty|0;empty,empty;empty

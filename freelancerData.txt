@@ -1,0 +1,10 @@
+JohnDoe,John@123,N/A,Graphic Designing,0,0,0, ; 
+JaneSmith,Jane@456,N/A,Web Development,0,0,0, ; 
+MikeJohnson,Mike@789,N/A,Content Writing,0,0,0, ; 
+EmilyDavis,Emily@101,N/A,Digital Marketing,0,0,0, ; 
+ChrisBrown,Chris@202,N/A,Video Editing,0,0,0, ; 
+SarahWilliams,Sarah@303,N/A,Game Development,0,0,0, ; 
+RobertLee,Robert@404,N/A,SEO Optimization,0,0,0, ; 
+OliviaMartinez,Olivia@505,N/A,CyberSecurity,0,0,0, ; 
+DanielClark,Daniel@606,4.300000,AI Learning,798,4.3,1, ; 
+SophiaWalker,Sophia@707,N/A,AI Learning,15,0,0, ; 

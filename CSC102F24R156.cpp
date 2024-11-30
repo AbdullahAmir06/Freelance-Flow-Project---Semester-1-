@@ -8,14 +8,965 @@
 using namespace std;
 
 // Set console code page to UTF-8
-void setConsoleCodePage()
-{
-    system("chcp 65001 > nul");
-}
+void setConsoleCodePage();
+
+// color change function
+void setColor(int colorCode);
+
+// display the admin menu upon admin login
+void adminMenu();
+
+// display the freelancer menu upon freelancer login
+void freelancerMenu();
+
+// display the client menu upon client login
+void clientMenu();
+
+// ADMIN FUNCTIONS
+
+// show all the detail of freelancers
+void freelancerStatistic(int Findex, string freelancerUserName[], string freelancerPassword[], string freelancerNiche[], string freelancerRating[], int freelancerEarning[]);
+
+// show all the detail of clients
+void clientStatistic(int Cindex, string clientUserName[], string clientPassword[], string clientNiche[1000][5], int clientSpend[]);
+
+// show all the detail of customer policy
+void customerPolicy(string headingCustomerPolicy[], string dataCustomerPolicy[]);
+
+// allow admin to add more policy
+int customerAddPolicy(string headingCustomerPolicy[], string dataCustomerPolicy[]);
+
+// allow admin to delete freelancer account
+int removeFreelancerAcc(int &Findex, string user, string freelancerUserName[], string freelancerPassword[], string freelancerNiche[], string freelancerRating[], int freelancerEarning[], string freelancerCustomerSupport[1000][2]);
+
+// allow admin to delete client account
+int removeClientAcc(int &Cindex, string rating[1000][5][1], string user, string clientUserName[], string clientPassword[], string clientNiche[1000][5], int clientSpend[], string clientJobDescription[1000][5], int ratingCounter[1000][5], int clientPayment[1000][5], string clientCustomerSupport[1000][2]);
+
+// show admin all the queries/suggesstion of freelancers and clients
+void customerSupport(string freelancerCustomerSupport[1000][2], string clientCustomerSupport[1000][2]);
+
+// display all the niches which admin has allowed in the app
+void nichesShow(string niches[]);
+
+// allow admin to add more niches
+int adminAddNiches(string niches[]);
+
+// FREELANCER FUNCTIONS
+
+// display the freelancer the jobs which match according to freelancer profession/skill
+void availableJob(int Cindex, string freelancerLogin[1][5], string clientUserName[], string clientJobDescription[1000][5], string clientNiche[1000][5], int clientPayment[1000][5]);
+
+// allow freelancer to select the job from the available one's
+bool jobSelection(int Findex, int Cindex, string clientUserName[], string freelancerLogin[1][5], string clientJobDescription[1000][5], string clientNiche[1000][5], int clientPayment[1000][5], string freelancerJobSelected[1000][4], string freelancerUserName[]);
+
+// freelaner customer support section
+void customerSupportfreelancer(int Findex, string freelancerLogin[1][5], string freelancerCustomerSupport[1000][2], string freelancerUserName[]);
+
+// freelancer work submit
+void freelancerWorkSubmit(int Findex, int Cindex, string freelancerLogin[1][5], string freelancerUserName[], string freelancerJobSelected[1000][4], string clientUserName[], string clientJobDescription[1000][5], string clientNiche[1000][5], int clientPayment[1000][5], int freelancerEarning[], int ratingCounter[1000][5], string rating[1000][5][1]);
+
+// allow freelancer to widthdraw their money
+char widthdrawMoney(int Findex, string freelancerLogin[1][5], string freelancerUserName[], int freelancerEarning[]);
+
+// display the freelancer his total earning
+void freelancerEarnings(int Findex, string freelancerLogin[1][5], string freelancerUserName[], int freelancerEarning[], string freelancerRating[]);
+
+// CLIENT FUNCTIONS
+
+// allow clients to post their jobs
+bool postJob(int Cindex, string niches[], string clientLogin[1][3], string clientUserName[], string clientPassword[], string clientNiche[1000][5], string clientJobDescription[1000][5], int clientPayment[1000][5], int clientSpend[], int ratingCounter[1000][5]);
+
+// freelaner customer support section
+void customerSupportClient(int Cindex, string clientCustomerSupport[1000][2], string clientUserName[]);
+
+// Pending rating of freelancers
+void pendingRating(int Findex, int Cindex, string clientLogin[1][3], string clientUserName[], string freelancerUserName[], string freelancerRating[], int ratingCounter[1000][5], string rating[1000][5][1], string clientJobDescription[1000][5], int clientPayment[1000][5], string clientNiche[1000][5], float ratingSum[], int ratingCount[]);
+
+// LOAD DATA
+
+// load all the data from files
+void loadData(string freelancerUserName[], string freelancerPassword[], string freelancerRating[], string freelancerNiche[], int freelancerEarning[], float ratingSum[], int ratingCount[], string freelancerCustomerSupport[][2], int &Findex, string clientUserName[], string clientPassword[], int clientSpend[], string clientJobDescription[][5], string clientNiche[][5], int clientPayment[][5], string clientCustomerSupport[][2], int ratingCounter[][5], string rating[][5][1], int &Cindex, string niches[], string headingCustomerPolicy[], string dataCustomerPolicy[]);
+
+// store all the data to files
+void storeData(string freelancerUserName[], string freelancerPassword[], string freelancerRating[], string freelancerNiche[], int freelancerEarning[], float ratingSum[], int ratingCount[], string freelancerCustomerSupport[][2], int Findex, string clientUserName[], string clientPassword[], int clientSpend[], string clientJobDescription[][5], string clientNiche[][5], int clientPayment[][5], string clientCustomerSupport[][2], int ratingCounter[][5], string rating[][5][1], int Cindex, string niches[], string headingCustomerPolicy[], string dataCustomerPolicy[]);
+
+void initilizeData(string freelancerUserName[], string freelancerPassword[], string freelancerRating[], string freelancerNiche[], string clientUserName[], string clientPassword[], string freelancerCustomerSupport[1000][2], string clientCustomerSupport[1000][2], int freelancerEarning[1000], int clientSpend[1000], string headingCustomerPolicy[1000], string dataCustomerPolicy[1000], string niches[100], string clientJobDescription[1000][5], string clientNiche[1000][5], int clientPayment[1000][5], int ratingCounter[1000][5], string freelancerJobSelected[1000][4], float ratingSum[1000], int ratingCount[1000], string rating[1000][5][1]);
 
 // temporary 2d array to store data
 string freelancerLogin[1][5];
 string clientLogin[1][3];
+
+int main()
+{
+
+    int Findex = 0, Cindex = 0;
+
+    string freelancerUserName[1000], freelancerPassword[1000], freelancerRating[1000], freelancerNiche[1000];
+    string clientUserName[1000], clientPassword[1000];
+    string freelancerCustomerSupport[1000][2];
+    string clientCustomerSupport[1000][2];
+    int freelancerEarning[1000], clientSpend[1000];
+
+    string headingCustomerPolicy[1000], dataCustomerPolicy[1000];
+    string niches[100]; // contain all allowed niches
+
+    string clientJobDescription[1000][5], clientNiche[1000][5];
+    int clientPayment[1000][5];
+    int ratingCounter[1000][5];
+
+    string freelancerJobSelected[1000][4];
+
+    float ratingSum[1000];
+    int ratingCount[1000];
+
+    string rating[1000][5][1]; // 1000 is client ,5 is niche and 1 is freelancer name
+
+    niches[0] = "Graphic Designing";
+    niches[1] = "Web Development";
+    niches[2] = "Content Writing";
+    niches[3] = "Digital Marketing";
+    niches[4] = "Video Editing";
+    niches[5] = "Game Development";
+    niches[6] = "SEO Optimization";
+    niches[7] = "CyberSecurity";
+    niches[8] = "Machine Learning";
+    niches[9] = "AI Learning";
+
+    initilizeData(freelancerUserName, freelancerPassword, freelancerRating, freelancerNiche, clientUserName, clientPassword,
+                  freelancerCustomerSupport, clientCustomerSupport, freelancerEarning, clientSpend, headingCustomerPolicy,
+                  dataCustomerPolicy, niches, clientJobDescription, clientNiche, clientPayment, ratingCounter, freelancerJobSelected,
+                  ratingSum, ratingCount, rating);
+
+    loadData(freelancerUserName, freelancerPassword, freelancerRating, freelancerNiche, freelancerEarning,
+             ratingSum, ratingCount, freelancerCustomerSupport, Findex, clientUserName, clientPassword,
+             clientSpend, clientJobDescription, clientNiche, clientPayment, clientCustomerSupport,
+             ratingCounter, rating, Cindex, niches, headingCustomerPolicy, dataCustomerPolicy);
+
+    string username, password;
+    int input = 0;
+    int adminCounter = 0;
+    int usertype = 11;
+    bool exit = false;
+    system("cls");
+    setConsoleCodePage();
+
+    setColor(7);
+    do
+    {
+        setColor(2);
+        cout << "-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------" << endl
+             << endl
+             << endl;
+        cout << "                                                       ███████╗██████╗ ███████╗███████╗██╗      █████╗ ███╗   ██╗ ██████╗███████╗    ███████╗██╗      ██████╗ ██╗    ██╗" << endl;
+        cout << "                                                       ██╔════╝██╔══██╗██╔════╝██╔════╝██║     ██╔══██╗████╗  ██║██╔════╝██╔════╝    ██╔════╝██║     ██╔═══██╗██║    ██║" << endl;
+        cout << "                                                       █████╗  ██████╔╝█████╗  █████╗  ██║     ███████║██╔██╗ ██║██║     █████╗      █████╗  ██║     ██║   ██║██║ █╗ ██║" << endl;
+        cout << "                                                       ██╔══╝  ██╔══██╗██╔══╝  ██╔══╝  ██║     ██╔══██║██║╚██╗██║██║     ██╔══╝      ██╔══╝  ██║     ██║   ██║██║███╗██║" << endl;
+        cout << "                                                       ██║     ██║  ██║███████╗███████╗███████╗██║  ██║██║ ╚████║╚██████╗███████╗    ██║     ███████╗╚██████╔╝╚███╔███╔╝" << endl;
+        cout << "                                                       ╚═╝     ╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝╚══════╝    ╚═╝     ╚══════╝ ╚═════╝  ╚══╝╚══╝ " << endl
+             << endl;
+        cout << "-----";
+        setColor(8);
+        cout << "FREELANCING MANAGEMENT SYSTEM ";
+        setColor(2);
+        cout << "--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------" << endl
+             << endl;
+        setColor(15);
+        cout << right;
+        cout << endl;
+        cout << setw(120) << "1. Administrator Login\n"
+             << setw(117) << "2. Freelancer Login\n"
+             << setw(113) << "3. Client Login\n"
+             << setw(105) << "0. Exit " << endl
+             << endl;
+        cout.unsetf(ios::right);
+        cout << "Enter: ";
+        cin >> input;
+        if (input == 0 && cin)
+        {
+            setColor(3);
+            cout << "Thank you for using system! " << endl;
+            setColor(15);
+            break;
+        }
+        while ((input > 3 || input < 0) || !cin)
+        {
+            system("cls");
+            cin.clear();
+            cin.ignore(100, '\n');
+            setColor(2);
+            cout << "-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------" << endl
+                 << endl
+                 << endl;
+            cout << "                                                       ███████╗██████╗ ███████╗███████╗██╗      █████╗ ███╗   ██╗ ██████╗███████╗    ███████╗██╗      ██████╗ ██╗    ██╗" << endl;
+            cout << "                                                       ██╔════╝██╔══██╗██╔════╝██╔════╝██║     ██╔══██╗████╗  ██║██╔════╝██╔════╝    ██╔════╝██║     ██╔═══██╗██║    ██║" << endl;
+            cout << "                                                       █████╗  ██████╔╝█████╗  █████╗  ██║     ███████║██╔██╗ ██║██║     █████╗      █████╗  ██║     ██║   ██║██║ █╗ ██║" << endl;
+            cout << "                                                       ██╔══╝  ██╔══██╗██╔══╝  ██╔══╝  ██║     ██╔══██║██║╚██╗██║██║     ██╔══╝      ██╔══╝  ██║     ██║   ██║██║███╗██║" << endl;
+            cout << "                                                       ██║     ██║  ██║███████╗███████╗███████╗██║  ██║██║ ╚████║╚██████╗███████╗    ██║     ███████╗╚██████╔╝╚███╔███╔╝" << endl;
+            cout << "                                                       ╚═╝     ╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝╚══════╝    ╚═╝     ╚══════╝ ╚═════╝  ╚══╝╚══╝ " << endl
+                 << endl;
+            cout << "-----";
+            setColor(8);
+            cout << "FREELANCING MANAGEMENT SYSTEM ";
+            setColor(2);
+            cout << "--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------" << endl
+                 << endl;
+            setColor(3);
+            cout << "Invalid Details Entered!" << endl;
+            setColor(15);
+            cout << "Please select the correct number" << endl;
+            cout << setw(120) << "1. Administrator Login\n"
+                 << setw(117) << "2. Freelancer Login\n"
+                 << setw(113) << "3. Client Login\n"
+                 << setw(105) << "0. Exit " << endl
+                 << endl;
+            cout << "Enter: ";
+            cin >> input;
+            cout << endl;
+            if (input == 0 && cin)
+            {
+                exit = true;
+                setColor(3);
+                cout << "Thank you for using system! " << endl;
+                setColor(15);
+                break;
+            }
+        }
+        switch (input)
+        {
+        case 1:
+            system("cls");
+
+            setColor(2);
+            cout << "-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------" << endl
+                 << endl
+                 << endl;
+            cout << "                                                       ███████╗██████╗ ███████╗███████╗██╗      █████╗ ███╗   ██╗ ██████╗███████╗    ███████╗██╗      ██████╗ ██╗    ██╗" << endl;
+            cout << "                                                       ██╔════╝██╔══██╗██╔════╝██╔════╝██║     ██╔══██╗████╗  ██║██╔════╝██╔════╝    ██╔════╝██║     ██╔═══██╗██║    ██║" << endl;
+            cout << "                                                       █████╗  ██████╔╝█████╗  █████╗  ██║     ███████║██╔██╗ ██║██║     █████╗      █████╗  ██║     ██║   ██║██║ █╗ ██║" << endl;
+            cout << "                                                       ██╔══╝  ██╔══██╗██╔══╝  ██╔══╝  ██║     ██╔══██║██║╚██╗██║██║     ██╔══╝      ██╔══╝  ██║     ██║   ██║██║███╗██║" << endl;
+            cout << "                                                       ██║     ██║  ██║███████╗███████╗███████╗██║  ██║██║ ╚████║╚██████╗███████╗    ██║     ███████╗╚██████╔╝╚███╔███╔╝" << endl;
+            cout << "                                                       ╚═╝     ╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝╚══════╝    ╚═╝     ╚══════╝ ╚═════╝  ╚══╝╚══╝ " << endl
+                 << endl;
+            cout << "-----";
+            setColor(8);
+            cout << "ADMIN : LOGIN IN ";
+            setColor(2);
+            cout << "---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------" << endl
+                 << endl;
+            setColor(15);
+
+            cout << endl;
+            cout << setw(115) << "Enter Username: ";
+            cin >> username;
+            cin.clear();
+            cin.ignore();
+            cout << setw(115) << "Enter Password: ";
+
+            char character;
+            password = "";
+            while ((character = _getch()) != '\r')
+            {
+                if (character == '\b')
+                {
+                    if (!password.empty())
+                    {
+                        password.pop_back();
+                        cout << "\b \b";
+                    }
+                }
+                else
+                {
+                    // get character by character and store it in password
+                    password += character;
+                    cout << "*";
+                }
+            }
+            cout << endl;
+            if (username == "Admin" && password == "123")
+            {
+                usertype = 1;
+
+                cout << setw(117) << "Logging In...." << endl;
+                password = "";
+                Sleep(1000);
+                system("cls");
+            }
+            else
+            {
+                // only two admin attempts are allowed to login the system
+                adminCounter++;
+                usertype = -1;
+                if (adminCounter == 2)
+                {
+                    break;
+                }
+                setColor(3);
+                cout << "One last attempt remaining!" << endl;
+                setColor(15);
+            }
+            break;
+        case 2:
+            system("cls");
+            setColor(2);
+            cout << "-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------" << endl
+                 << endl
+                 << endl;
+            cout << "                                                       ███████╗██████╗ ███████╗███████╗██╗      █████╗ ███╗   ██╗ ██████╗███████╗    ███████╗██╗      ██████╗ ██╗    ██╗" << endl;
+            cout << "                                                       ██╔════╝██╔══██╗██╔════╝██╔════╝██║     ██╔══██╗████╗  ██║██╔════╝██╔════╝    ██╔════╝██║     ██╔═══██╗██║    ██║" << endl;
+            cout << "                                                       █████╗  ██████╔╝█████╗  █████╗  ██║     ███████║██╔██╗ ██║██║     █████╗      █████╗  ██║     ██║   ██║██║ █╗ ██║" << endl;
+            cout << "                                                       ██╔══╝  ██╔══██╗██╔══╝  ██╔══╝  ██║     ██╔══██║██║╚██╗██║██║     ██╔══╝      ██╔══╝  ██║     ██║   ██║██║███╗██║" << endl;
+            cout << "                                                       ██║     ██║  ██║███████╗███████╗███████╗██║  ██║██║ ╚████║╚██████╗███████╗    ██║     ███████╗╚██████╔╝╚███╔███╔╝" << endl;
+            cout << "                                                       ╚═╝     ╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝╚══════╝    ╚═╝     ╚══════╝ ╚═════╝  ╚══╝╚══╝ " << endl
+                 << endl;
+            cout << "-----";
+            setColor(8);
+            cout << " FREELANCER : LOGIN IN ";
+            setColor(2);
+            cout << "--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------" << endl
+                 << endl;
+            setColor(15);
+            cout << endl;
+            cout << setw(116) << "1. Sign up\n"
+                 << setw(116) << "2. Sign in\n"
+                 << setw(115) << "0. Go Back" << endl;
+            cout << "Enter: ";
+            cin.clear();
+            cin.ignore(20, '\n');
+            cin >> input;
+            if (input == 0 && cin)
+            {
+                system("cls");
+                break;
+            }
+            while ((input > 2 || input < 0) || !cin)
+            {
+                system("cls");
+                cin.clear();
+                cin.ignore(100, '\n');
+                setColor(2);
+                cout << "-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------" << endl
+                     << endl
+                     << endl;
+                cout << "                                                       ███████╗██████╗ ███████╗███████╗██╗      █████╗ ███╗   ██╗ ██████╗███████╗    ███████╗██╗      ██████╗ ██╗    ██╗" << endl;
+                cout << "                                                       ██╔════╝██╔══██╗██╔════╝██╔════╝██║     ██╔══██╗████╗  ██║██╔════╝██╔════╝    ██╔════╝██║     ██╔═══██╗██║    ██║" << endl;
+                cout << "                                                       █████╗  ██████╔╝█████╗  █████╗  ██║     ███████║██╔██╗ ██║██║     █████╗      █████╗  ██║     ██║   ██║██║ █╗ ██║" << endl;
+                cout << "                                                       ██╔══╝  ██╔══██╗██╔══╝  ██╔══╝  ██║     ██╔══██║██║╚██╗██║██║     ██╔══╝      ██╔══╝  ██║     ██║   ██║██║███╗██║" << endl;
+                cout << "                                                       ██║     ██║  ██║███████╗███████╗███████╗██║  ██║██║ ╚████║╚██████╗███████╗    ██║     ███████╗╚██████╔╝╚███╔███╔╝" << endl;
+                cout << "                                                       ╚═╝     ╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝╚══════╝    ╚═╝     ╚══════╝ ╚═════╝  ╚══╝╚══╝ " << endl
+                     << endl;
+                cout << "-----";
+                setColor(8);
+                cout << " FREELANCER : LOGIN IN ";
+                setColor(2);
+                cout << "--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------" << endl
+                     << endl;
+                setColor(15);
+                cout << endl;
+                setColor(3);
+                cout << "Invalid Details Entered!" << endl;
+                setColor(15);
+                cout << "Please select the correct number" << endl;
+                cout << setw(116) << "1. Sign up\n"
+                     << setw(116) << "2. Sign in\n"
+                     << setw(115) << "0. Go Back" << endl;
+                cout << "Enter: ";
+                cin >> input;
+
+                if (input == 0 && cin)
+                    break;
+                cout << endl;
+                usertype = 0;
+            }
+            if (input == 1)
+            {
+                usertype = 0; // random initialize
+                for (int i = 0; i < 1000; i++)
+                {
+                    if (freelancerUserName[i] == " ")
+                    {
+
+                        cin.clear();
+                        cin.ignore(20, '\n');
+                        cout << setw(121) << "Enter Username: ";
+
+                        cin >> freelancerUserName[i];
+                        while (freelancerUserName[i].length() < 3)
+                        {
+
+                            cin.ignore();
+                            setColor(3);
+                            cout << "UserName should contain atleast 3 character's." << endl;
+                            setColor(15);
+                            cout << setw(121) << "Enter Username: ";
+                            cin >> freelancerUserName[i];
+                        }
+                        cin.ignore();
+                        cout << setw(121) << "Enter Password: ";
+                        cin >> freelancerPassword[i];
+
+                        while (freelancerPassword[i].length() < 8)
+                        {
+                            cin.ignore();
+                            cout << endl;
+                            setColor(3);
+                            cout << "Password should contain atleast 8 character's." << endl;
+                            setColor(15);
+                            cout << setw(121) << "Enter Password: ";
+                            cin >> freelancerPassword[i];
+                        }
+                        cin.ignore();
+                        cout << endl
+                             << endl;
+
+                        nichesShow(niches);
+                        cout << "Select Your Niche: ";
+                        getline(cin, freelancerNiche[i]);
+                        bool flag = false;
+                        while (flag == false)
+                        {
+                            for (int j = 0; j < 100; j++)
+                            {
+                                if (freelancerNiche[i] == niches[j])
+                                {
+                                    flag = true;
+                                    break;
+                                }
+                            }
+                            if (flag == true)
+                            {
+                                break;
+                            }
+                            setColor(3);
+                            cout << "Wrong Niche Selected (select from available one's)" << endl;
+                            setColor(15);
+                            cout << "Select Your Niche: ";
+                            getline(cin, freelancerNiche[i]);
+                        }
+                        Findex++;
+                        setColor(3);
+                        cout << "Account Created Successfully! " << endl;
+                        setColor(15);
+
+                        break;
+                    }
+                    if (freelancerUserName[999] != " ")
+                    {
+                        cout << "Account limit reached, unable to register more users" << endl;
+                        break;
+                    }
+                }
+            }
+            else if (input == 2)
+            {
+                cin.clear();
+                cin.ignore(30, '\n');
+                cout << setw(121) << "Enter Username: ";
+                getline(cin, username);
+                cout << setw(121) << "Enter Password: ";
+
+                char character;
+                password = "";
+                while ((character = _getch()) != '\r')
+                {
+                    if (character == '\b')
+                    {
+                        if (!password.empty())
+                        {
+                            password.pop_back();
+                            cout << "\b \b";
+                        }
+                    }
+                    else
+                    {
+                        password += character;
+                        cout << "*";
+                    }
+                }
+                cout << endl;
+
+                for (int i = 0; i < Findex; i++)
+                {
+                    if (username == freelancerUserName[i] && password == freelancerPassword[i])
+                    {
+                        usertype = 2;
+                        freelancerLogin[0][0] = freelancerUserName[i];
+                        freelancerLogin[0][1] = freelancerPassword[i];
+                        freelancerLogin[0][2] = freelancerNiche[i];
+                        freelancerLogin[0][3] = freelancerRating[i];
+                        freelancerLogin[0][4] = freelancerEarning[i];
+                        setColor(3);
+
+                        cout << setw(122) << "Logging In...." << endl;
+                        setColor(15);
+                        Sleep(1000);
+                        system("cls");
+                        break;
+                    }
+                    else if (username != freelancerUserName[i] || password != freelancerPassword[i])
+                    {
+                        usertype = -1;
+                    }
+                }
+            }
+
+            break;
+        case 3:
+            system("cls");
+            setColor(2);
+            cout << "-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------" << endl
+                 << endl
+                 << endl;
+            cout << "                                                       ███████╗██████╗ ███████╗███████╗██╗      █████╗ ███╗   ██╗ ██████╗███████╗    ███████╗██╗      ██████╗ ██╗    ██╗" << endl;
+            cout << "                                                       ██╔════╝██╔══██╗██╔════╝██╔════╝██║     ██╔══██╗████╗  ██║██╔════╝██╔════╝    ██╔════╝██║     ██╔═══██╗██║    ██║" << endl;
+            cout << "                                                       █████╗  ██████╔╝█████╗  █████╗  ██║     ███████║██╔██╗ ██║██║     █████╗      █████╗  ██║     ██║   ██║██║ █╗ ██║" << endl;
+            cout << "                                                       ██╔══╝  ██╔══██╗██╔══╝  ██╔══╝  ██║     ██╔══██║██║╚██╗██║██║     ██╔══╝      ██╔══╝  ██║     ██║   ██║██║███╗██║" << endl;
+            cout << "                                                       ██║     ██║  ██║███████╗███████╗███████╗██║  ██║██║ ╚████║╚██████╗███████╗    ██║     ███████╗╚██████╔╝╚███╔███╔╝" << endl;
+            cout << "                                                       ╚═╝     ╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝╚══════╝    ╚═╝     ╚══════╝ ╚═════╝  ╚══╝╚══╝ " << endl
+                 << endl;
+            cout << "-----";
+            setColor(8);
+            cout << " CLIENT : LOGIN IN ";
+            setColor(2);
+            cout << "-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------" << endl
+                 << endl;
+            setColor(15);
+            cout << setw(116) << "1. Sign up\n"
+                 << setw(116) << "2. Sign in\n"
+                 << setw(115) << "0. Go Back" << endl;
+            cout << "Enter: ";
+            cin.clear();
+            cin.ignore(100, '\n');
+            cin >> input;
+            if (input == 0 && cin)
+            {
+                system("cls");
+                break;
+            }
+            while ((input > 2 || input < 0) || !cin)
+            {
+                system("cls");
+                cin.clear();
+                cin.ignore(100, '\n');
+
+                setColor(2);
+                cout << "-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------" << endl
+                     << endl
+                     << endl;
+                cout << "                                                       ███████╗██████╗ ███████╗███████╗██╗      █████╗ ███╗   ██╗ ██████╗███████╗    ███████╗██╗      ██████╗ ██╗    ██╗" << endl;
+                cout << "                                                       ██╔════╝██╔══██╗██╔════╝██╔════╝██║     ██╔══██╗████╗  ██║██╔════╝██╔════╝    ██╔════╝██║     ██╔═══██╗██║    ██║" << endl;
+                cout << "                                                       █████╗  ██████╔╝█████╗  █████╗  ██║     ███████║██╔██╗ ██║██║     █████╗      █████╗  ██║     ██║   ██║██║ █╗ ██║" << endl;
+                cout << "                                                       ██╔══╝  ██╔══██╗██╔══╝  ██╔══╝  ██║     ██╔══██║██║╚██╗██║██║     ██╔══╝      ██╔══╝  ██║     ██║   ██║██║███╗██║" << endl;
+                cout << "                                                       ██║     ██║  ██║███████╗███████╗███████╗██║  ██║██║ ╚████║╚██████╗███████╗    ██║     ███████╗╚██████╔╝╚███╔███╔╝" << endl;
+                cout << "                                                       ╚═╝     ╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝╚══════╝    ╚═╝     ╚══════╝ ╚═════╝  ╚══╝╚══╝ " << endl
+                     << endl;
+                cout << "-----";
+                setColor(8);
+                cout << " CLIENT : LOGIN IN ";
+                setColor(2);
+                cout << "-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------" << endl
+                     << endl;
+                setColor(3);
+                cout << "Invalid Data Entered\n";
+                setColor(15);
+                cout << "Please select the correct number\n";
+                cout << setw(116) << "1. Sign up\n"
+                     << setw(116) << "2. Sign in\n"
+                     << setw(115) << "0. Go Back" << endl;
+                cout << "Enter: ";
+                cin >> input;
+
+                if (input == 0 && cin)
+                    break;
+                cout << endl;
+            }
+            if (input == 1)
+            {
+                usertype = 0;
+                for (int i = 0; i < 1000; i++)
+                {
+                    if (clientUserName[i] == "empty")
+                    {
+                        cin.ignore(20, '\n');
+                        cout << setw(121) << "Enter Username: ";
+                        cin >> clientUserName[i];
+
+                        while (clientUserName[i].length() < 3)
+                        {
+
+                            setColor(3);
+                            cout << "UserName should contain atleast 3 character's." << endl;
+                            setColor(15);
+                            cout << setw(121) << "Enter Username: ";
+                            cin >> clientUserName[i];
+                        }
+
+                        cout << setw(121) << "Enter Password: ";
+                        cin >> clientPassword[i];
+                        cin.ignore();
+                        while (clientPassword[i].length() < 8)
+                        {
+
+                            cout << endl;
+                            setColor(3);
+                            cout << "Password should contain atleast 8 character's." << endl;
+                            setColor(15);
+
+                            cout << setw(121) << "Enter Password: ";
+                            getline(cin, clientPassword[i]);
+                        }
+
+                        Cindex++;
+                        setColor(3);
+                        cout << "Account Created Successfully! " << endl;
+                        setColor(15);
+                        break;
+                    }
+                    if (clientUserName[999] != "empty")
+                    {
+                        cout << "Account limit reached, unable to register more users" << endl;
+                        break;
+                    }
+                }
+            }
+            else if (input == 2)
+            {
+                cin.clear();
+                cin.ignore(30, '\n');
+                cout << setw(121) << "Enter Username: ";
+                getline(cin, username);
+                cout << setw(121) << "Enter Password: ";
+
+                char character;
+                password = "";
+                while ((character = _getch()) != '\r')
+                {
+                    if (character == '\b')
+                    {
+                        if (!password.empty())
+                        {
+                            password.pop_back();
+                            cout << "\b \b";
+                        }
+                    }
+                    else
+                    {
+                        password += character;
+                        cout << "*";
+                    }
+                }
+                cout << endl;
+
+                for (int i = 0; i < Cindex; i++)
+                {
+                    if ((username == clientUserName[i]) && (password == clientPassword[i]))
+                    {
+                        usertype = 3;
+                        clientLogin[0][0] = clientUserName[i];
+                        clientLogin[0][1] = clientPassword[i];
+                        setColor(3);
+
+                        cout << setw(122) << "Logging In...." << endl;
+                        setColor(15);
+                        Sleep(1000);
+                        system("cls");
+                        break;
+                    }
+                    else if ((username != clientUserName[i]) || (password != clientPassword[i]))
+                    {
+                        usertype = -1;
+                    }
+                }
+            }
+            break;
+        default:
+            break;
+        } // switch end
+
+        if (usertype == 1) // admin menu
+        {
+            do
+            {
+                adminMenu();
+                cout << endl;
+                cout << "Enter: ";
+                cin >> input;
+                if (input == 0 && cin)
+                {
+                    cout << setw(115) << "Logging Out....." << endl;
+                    Sleep(1000);
+                    system("cls");
+                    break;
+                }
+                while ((input > 7 || input < 0) || !cin)
+                {
+                    system("cls");
+                    cin.clear();
+                    cin.ignore(100, '\n');
+                    adminMenu();
+                    setColor(3);
+                    cout << "Invalid Details Entered!" << endl;
+                    setColor(15);
+                    cout << "Please select the correct number" << endl;
+                    cout << "Enter: ";
+                    cin >> input;
+                    cout << endl;
+                    if (input == 0 && cin)
+                    {
+                        cout << setw(115) << "Logging Out....." << endl;
+                        Sleep(1000);
+                        system("cls");
+                        break;
+                    }
+                }
+                if (input == 1)
+                {
+                    freelancerStatistic(Findex, freelancerUserName, freelancerPassword, freelancerNiche, freelancerRating, freelancerEarning);
+                    // check freelancer statistics
+                }
+                else if (input == 2)
+                {
+                    clientStatistic(Cindex, clientUserName, clientPassword, clientNiche, clientSpend);
+                    // check client statistics
+                }
+                else if (input == 3)
+                {
+                    customerAddPolicy(headingCustomerPolicy, dataCustomerPolicy);
+                    // update customer policy function
+                }
+                else if (input == 4)
+                {
+                    string user = " ";
+                    int userRemoved = 5;
+                    system("cls");
+                    freelancerStatistic(Findex, freelancerUserName, freelancerPassword, freelancerNiche, freelancerRating, freelancerEarning);
+                    cout << endl;
+                    setColor(2);
+                    cout << "------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------" << endl
+                         << endl
+                         << endl;
+                    setColor(15);
+                    cout << "Enter Username to remove or press 0 to go back: ";
+                    cin.ignore(30, '\n');
+                    cin.clear();
+                    getline(cin, user);
+
+                    userRemoved = removeFreelancerAcc(Findex, user, freelancerUserName, freelancerPassword, freelancerNiche, freelancerRating, freelancerEarning, freelancerCustomerSupport);
+                    cin.clear();
+                    if (userRemoved == 1)
+                        cout << "Freelancer " << user << " Removed Successfully! " << endl;
+                    if (userRemoved == -1)
+                        cout << "No such Freelancer Account Exist in the system! " << endl;
+
+                    // remove freelancer function
+                }
+                else if (input == 5)
+                {
+                    string user = " ";
+                    int userRemoved = 5;
+                    system("cls");
+                    clientStatistic(Cindex, clientUserName, clientPassword, clientNiche, clientSpend);
+                    cout << endl;
+                    setColor(2);
+                    cout << "------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------" << endl
+                         << endl
+                         << endl;
+                    setColor(15);
+                    cout << "Enter Username to remove or press 0 to go back: ";
+                    cin.ignore(30, '\n');
+                    cin.clear();
+                    getline(cin, user);
+
+                    userRemoved = removeClientAcc(Cindex, rating, user, clientUserName, clientPassword, clientNiche, clientSpend, clientJobDescription, ratingCounter, clientPayment, clientCustomerSupport);
+                    cin.clear();
+                    if (userRemoved == 1)
+                        cout << "Client " << user << " Removed Successfully! " << endl;
+                    if (userRemoved == -1)
+                        cout << "No such Client Account Exist in the system! " << endl;
+                    // remove client function
+                }
+                else if (input == 6)
+                {
+                    customerSupport(freelancerCustomerSupport, clientCustomerSupport);
+                    // customer support function
+                }
+                else if (input == 7)
+                {
+                    adminAddNiches(niches);
+                    // add new niches
+                }
+            } while (input != 0);
+
+        } // admin menu end
+
+        if (usertype == 2)
+        {
+            do
+            {
+                freelancerMenu();
+                cout << "Enter: ";
+                cin >> input;
+                if (input == 0 && cin)
+                {
+                    cout << endl
+                         << "Logging Out....." << endl;
+                    Sleep(1000);
+                    system("cls");
+                    break;
+                }
+                while ((input > 5 || input < 0) || !cin)
+                {
+                    system("cls");
+                    cin.clear();
+                    cin.ignore(100, '\n');
+                    freelancerMenu();
+                    setColor(3);
+                    cout << "Invalid Details Entered!" << endl;
+                    setColor(15);
+                    cout << "Please select the correct number" << endl;
+                    cout << "Enter: ";
+                    cin >> input;
+                    cout << endl;
+                    if (input == 0 && cin)
+                    {
+                        cout << endl
+                             << "Logging Out....." << endl;
+                        Sleep(1000);
+                        system("cls");
+                        break;
+                    }
+                }
+                if (input == 1)
+                {
+                    jobSelection(Findex, Cindex, clientUserName, freelancerLogin, clientJobDescription, clientNiche, clientPayment, freelancerJobSelected, freelancerUserName);
+                    /*funtion call code*/
+                }
+                else if (input == 2)
+                {
+                    freelancerWorkSubmit(Findex, Cindex, freelancerLogin, freelancerUserName, freelancerJobSelected, clientUserName, clientJobDescription, clientNiche, clientPayment, freelancerEarning, ratingCounter, rating);
+                    /*function call code*/
+                }
+                else if (input == 3)
+                {
+                    freelancerEarnings(Findex, freelancerLogin, freelancerUserName, freelancerEarning, freelancerRating);
+                    /*function call code*/
+                }
+                else if (input == 4)
+                {
+                    customerSupportfreelancer(Findex, freelancerLogin, freelancerCustomerSupport, freelancerUserName);
+                    /*customer Support freelancer function */
+                }
+                else if (input == 5)
+                {
+                    customerPolicy(headingCustomerPolicy, dataCustomerPolicy);
+                    /*customerPolicy function */
+                }
+
+            } while (input != 0); // freelancer menu end
+        }
+        if (usertype == 3)
+        {
+            do
+            {
+
+                clientMenu();
+                cout << "Enter: ";
+                cin >> input;
+                if (input == 0 && cin)
+                {
+                    cout << endl
+                         << "Logging Out....." << endl;
+                    Sleep(1000);
+                    system("cls");
+                    break;
+                }
+                while ((input > 4 || input < 0) || !cin)
+                {
+                    system("cls");
+                    cin.clear();
+                    cin.ignore(100, '\n');
+                    clientMenu();
+                    setColor(3);
+                    cout << "Invalid Details Entered!" << endl;
+                    setColor(15);
+                    cout << "Please select the correct number" << endl;
+                    cout << "Enter: ";
+                    cin >> input;
+                    cout << endl;
+                    if (input == 0 && cin)
+                    {
+                        cout << endl
+                             << "Logging Out....." << endl;
+                        Sleep(1000);
+                        system("cls");
+                        break;
+                    }
+                }
+                if (input == 1)
+                {
+                    bool res = postJob(Cindex, niches, clientLogin, clientUserName, clientPassword, clientNiche, clientJobDescription, clientPayment, clientSpend, ratingCounter);
+                    if (res == 0)
+                    {
+                        setColor(3);
+                        cout << "\nMaximum Jobs are already Posted.\nCan not post more jobs!" << endl;
+                        setColor(15);
+                    }
+                    if (res == 1)
+                    {
+                        setColor(3);
+                        cout << "\nJob Posted Successfully!" << endl;
+                        setColor(15);
+                    }
+                    /*post job funtion */
+                }
+                else if (input == 2)
+                {
+                    pendingRating(Findex, Cindex, clientLogin, clientUserName, freelancerUserName, freelancerRating, ratingCounter, rating, clientJobDescription, clientPayment, clientNiche, ratingSum, ratingCount);
+                    /*function call code*/
+                }
+                else if (input == 3)
+                {
+                    customerPolicy(headingCustomerPolicy, dataCustomerPolicy);
+                    /*customer policy function */
+                }
+                else if (input == 4)
+                {
+                    customerSupportClient(Cindex, clientCustomerSupport, clientUserName);
+                    /*customer support client function call code*/
+                }
+
+            } while (input != 0); // client menu end
+        }
+
+        if (usertype == -1)
+        {
+            setColor(3);
+            cout << "Invalid Details Entered!" << endl;
+            setColor(15);
+        }
+
+        // last menu to check again
+
+        if (adminCounter == 2 || exit == true)
+        {
+            break; // break the loop if invalid credentials are entered twice
+        }
+        usertype = 0; // no garbage value
+        input = -1;   // so that it doesnot terminate the main loop
+
+    } while (input != 0); // change input to 0 to stop the program
+
+    storeData(freelancerUserName, freelancerPassword, freelancerRating, freelancerNiche, freelancerEarning,
+              ratingSum, ratingCount, freelancerCustomerSupport, Findex, clientUserName, clientPassword,
+              clientSpend, clientJobDescription, clientNiche, clientPayment, clientCustomerSupport,
+              ratingCounter, rating, Cindex, niches, headingCustomerPolicy, dataCustomerPolicy);
+
+    return 0;
+}
+
+void setConsoleCodePage()
+{
+    system("chcp 65001 > nul");
+}
 
 // color change function
 void setColor(int colorCode)
@@ -1634,26 +2585,8 @@ void storeData(string freelancerUserName[], string freelancerPassword[], string 
     cout << "Data stored s/uccessfully.\n";
 }
 
-int main()
+void initilizeData(string freelancerUserName[], string freelancerPassword[], string freelancerRating[], string freelancerNiche[], string clientUserName[], string clientPassword[], string freelancerCustomerSupport[1000][2], string clientCustomerSupport[1000][2], int freelancerEarning[1000], int clientSpend[1000], string headingCustomerPolicy[1000], string dataCustomerPolicy[1000], string niches[100], string clientJobDescription[1000][5], string clientNiche[1000][5], int clientPayment[1000][5], int ratingCounter[1000][5], string freelancerJobSelected[1000][4], float ratingSum[1000], int ratingCount[1000], string rating[1000][5][1])
 {
-    // setColor(7);  //original code
-    int Findex = 0, Cindex = 0;
-
-    string freelancerUserName[1000], freelancerPassword[1000], clientUserName[1000], clientPassword[1000], freelancerRating[1000], headingCustomerPolicy[1000], dataCustomerPolicy[1000], freelancerNiche[1000];
-    int freelancerEarning[1000], clientSpend[1000];
-    string freelancerCustomerSupport[1000][2];
-    string clientCustomerSupport[1000][2];
-    string niches[100]; // contain all allowed niches
-
-    string clientJobDescription[1000][5], clientNiche[1000][5];
-    int clientPayment[1000][5];
-    int ratingCounter[1000][5] = {0};
-    string freelancerJobSelected[1000][4];
-    float ratingSum[1000] = {0.0};
-    int ratingCount[1000] = {0};
-
-    string rating[1000][5][1]; // 1000 is client ,5 is niche and 1 is freelancer name
-
     for (int i = 0; i < 1000; i++)
     {
         freelancerUserName[i] = " ";
@@ -1663,6 +2596,8 @@ int main()
         freelancerRating[i] = "N/A";
         freelancerEarning[i] = 0;
         clientSpend[i] = 0;
+        ratingSum[i] = 0.0;
+        ratingCount[i] = 0;
         headingCustomerPolicy[i] = " ";
         dataCustomerPolicy[i] = " ";
         freelancerNiche[i] = " ";
@@ -1676,6 +2611,7 @@ int main()
             clientNiche[i][j] = "empty";
             clientJobDescription[i][j] = "empty";
             clientPayment[i][j] = 0;
+            ratingCounter[i][i] = 0;
             for (int m = 0; m < 1; m++)
             {
                 rating[i][j][m] = "empty";
@@ -1686,16 +2622,7 @@ int main()
             freelancerJobSelected[i][j] = " ";
         }
     }
-    niches[0] = "Graphic Designing";
-    niches[1] = "Web Development";
-    niches[2] = "Content Writing";
-    niches[3] = "Digital Marketing";
-    niches[4] = "Video Editing";
-    niches[5] = "Game Development";
-    niches[6] = "SEO Optimization";
-    niches[7] = "CyberSecurity";
-    niches[8] = "Machine Learning";
-    niches[9] = "AI Learning";
+
     for (int i = 10; i < 100; i++)
     {
         niches[i] = " ";
@@ -1714,821 +2641,4 @@ int main()
             clientLogin[i][j] = "empty";
         }
     }
-
-    loadData(freelancerUserName, freelancerPassword, freelancerRating, freelancerNiche, freelancerEarning,
-             ratingSum, ratingCount, freelancerCustomerSupport, Findex, clientUserName, clientPassword,
-             clientSpend, clientJobDescription, clientNiche, clientPayment, clientCustomerSupport,
-             ratingCounter, rating, Cindex, niches, headingCustomerPolicy, dataCustomerPolicy);
-
-    string username, password;
-    int input = 0;
-    int adminCounter = 0;
-    int usertype = 11;
-    bool exit = false;
-    system("cls");
-    setConsoleCodePage();
-
-    setColor(7);
-    do
-    {
-        setColor(2);
-        cout << "-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------" << endl
-             << endl
-             << endl;
-        cout << "                                                       ███████╗██████╗ ███████╗███████╗██╗      █████╗ ███╗   ██╗ ██████╗███████╗    ███████╗██╗      ██████╗ ██╗    ██╗" << endl;
-        cout << "                                                       ██╔════╝██╔══██╗██╔════╝██╔════╝██║     ██╔══██╗████╗  ██║██╔════╝██╔════╝    ██╔════╝██║     ██╔═══██╗██║    ██║" << endl;
-        cout << "                                                       █████╗  ██████╔╝█████╗  █████╗  ██║     ███████║██╔██╗ ██║██║     █████╗      █████╗  ██║     ██║   ██║██║ █╗ ██║" << endl;
-        cout << "                                                       ██╔══╝  ██╔══██╗██╔══╝  ██╔══╝  ██║     ██╔══██║██║╚██╗██║██║     ██╔══╝      ██╔══╝  ██║     ██║   ██║██║███╗██║" << endl;
-        cout << "                                                       ██║     ██║  ██║███████╗███████╗███████╗██║  ██║██║ ╚████║╚██████╗███████╗    ██║     ███████╗╚██████╔╝╚███╔███╔╝" << endl;
-        cout << "                                                       ╚═╝     ╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝╚══════╝    ╚═╝     ╚══════╝ ╚═════╝  ╚══╝╚══╝ " << endl
-             << endl;
-        cout << "-----";
-        setColor(8);
-        cout << "FREELANCING MANAGEMENT SYSTEM ";
-        setColor(2);
-        cout << "--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------" << endl
-             << endl;
-        setColor(15);
-        cout << right;
-        cout << endl;
-        cout << setw(120) << "1. Administrator Login\n"
-             << setw(117) << "2. Freelancer Login\n"
-             << setw(113) << "3. Client Login\n"
-             << setw(105) << "0. Exit " << endl
-             << endl;
-        cout.unsetf(ios::right);
-        cout << "Enter: ";
-        cin >> input;
-        if (input == 0 && cin)
-        {
-            setColor(3);
-            cout << "Thank you for using system! " << endl;
-            setColor(15);
-            break;
-        }
-        while ((input > 3 || input < 0) || !cin)
-        {
-            system("cls");
-            cin.clear();
-            cin.ignore(100, '\n');
-            setColor(2);
-            cout << "-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------" << endl
-                 << endl
-                 << endl;
-            cout << "                                                       ███████╗██████╗ ███████╗███████╗██╗      █████╗ ███╗   ██╗ ██████╗███████╗    ███████╗██╗      ██████╗ ██╗    ██╗" << endl;
-            cout << "                                                       ██╔════╝██╔══██╗██╔════╝██╔════╝██║     ██╔══██╗████╗  ██║██╔════╝██╔════╝    ██╔════╝██║     ██╔═══██╗██║    ██║" << endl;
-            cout << "                                                       █████╗  ██████╔╝█████╗  █████╗  ██║     ███████║██╔██╗ ██║██║     █████╗      █████╗  ██║     ██║   ██║██║ █╗ ██║" << endl;
-            cout << "                                                       ██╔══╝  ██╔══██╗██╔══╝  ██╔══╝  ██║     ██╔══██║██║╚██╗██║██║     ██╔══╝      ██╔══╝  ██║     ██║   ██║██║███╗██║" << endl;
-            cout << "                                                       ██║     ██║  ██║███████╗███████╗███████╗██║  ██║██║ ╚████║╚██████╗███████╗    ██║     ███████╗╚██████╔╝╚███╔███╔╝" << endl;
-            cout << "                                                       ╚═╝     ╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝╚══════╝    ╚═╝     ╚══════╝ ╚═════╝  ╚══╝╚══╝ " << endl
-                 << endl;
-            cout << "-----";
-            setColor(8);
-            cout << "FREELANCING MANAGEMENT SYSTEM ";
-            setColor(2);
-            cout << "--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------" << endl
-                 << endl;
-            setColor(3);
-            cout << "Invalid Details Entered!" << endl;
-            setColor(15);
-            cout << "Please select the correct number" << endl;
-            cout << setw(120) << "1. Administrator Login\n"
-                 << setw(117) << "2. Freelancer Login\n"
-                 << setw(113) << "3. Client Login\n"
-                 << setw(105) << "0. Exit " << endl
-                 << endl;
-            cout << "Enter: ";
-            cin >> input;
-            cout << endl;
-            if (input == 0 && cin)
-            {
-                exit = true;
-                setColor(3);
-                cout << "Thank you for using system! " << endl;
-                setColor(15);
-                break;
-            }
-        }
-        switch (input)
-        {
-        case 1:
-            system("cls");
-
-            setColor(2);
-            cout << "-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------" << endl
-                 << endl
-                 << endl;
-            cout << "                                                       ███████╗██████╗ ███████╗███████╗██╗      █████╗ ███╗   ██╗ ██████╗███████╗    ███████╗██╗      ██████╗ ██╗    ██╗" << endl;
-            cout << "                                                       ██╔════╝██╔══██╗██╔════╝██╔════╝██║     ██╔══██╗████╗  ██║██╔════╝██╔════╝    ██╔════╝██║     ██╔═══██╗██║    ██║" << endl;
-            cout << "                                                       █████╗  ██████╔╝█████╗  █████╗  ██║     ███████║██╔██╗ ██║██║     █████╗      █████╗  ██║     ██║   ██║██║ █╗ ██║" << endl;
-            cout << "                                                       ██╔══╝  ██╔══██╗██╔══╝  ██╔══╝  ██║     ██╔══██║██║╚██╗██║██║     ██╔══╝      ██╔══╝  ██║     ██║   ██║██║███╗██║" << endl;
-            cout << "                                                       ██║     ██║  ██║███████╗███████╗███████╗██║  ██║██║ ╚████║╚██████╗███████╗    ██║     ███████╗╚██████╔╝╚███╔███╔╝" << endl;
-            cout << "                                                       ╚═╝     ╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝╚══════╝    ╚═╝     ╚══════╝ ╚═════╝  ╚══╝╚══╝ " << endl
-                 << endl;
-            cout << "-----";
-            setColor(8);
-            cout << "ADMIN : LOGIN IN ";
-            setColor(2);
-            cout << "---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------" << endl
-                 << endl;
-            setColor(15);
-
-            cout << endl;
-            cout << setw(115) << "Enter Username: ";
-            cin >> username;
-            cin.clear();
-            cin.ignore();
-            cout << setw(115) << "Enter Password: ";
-
-            char character;
-            password = "";
-            while ((character = _getch()) != '\r')
-            {
-                if (character == '\b')
-                {
-                    if (!password.empty())
-                    {
-                        password.pop_back();
-                        cout << "\b \b";
-                    }
-                }
-                else
-                {
-                    // get character by character and store it in password
-                    password += character;
-                    cout << "*";
-                }
-            }
-            cout << endl;
-            if (username == "Admin" && password == "123")
-            {
-                usertype = 1;
-
-                cout << setw(117) << "Logging In...." << endl;
-                password = "";
-                Sleep(1000);
-                system("cls");
-            }
-            else
-            {
-                // only two admin attempts are allowed to login the system
-                adminCounter++;
-                usertype = -1;
-                if (adminCounter == 2)
-                {
-                    break;
-                }
-                setColor(3);
-                cout << "One last attempt remaining!" << endl;
-                setColor(15);
-            }
-            break;
-        case 2:
-            system("cls");
-            setColor(2);
-            cout << "-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------" << endl
-                 << endl
-                 << endl;
-            cout << "                                                       ███████╗██████╗ ███████╗███████╗██╗      █████╗ ███╗   ██╗ ██████╗███████╗    ███████╗██╗      ██████╗ ██╗    ██╗" << endl;
-            cout << "                                                       ██╔════╝██╔══██╗██╔════╝██╔════╝██║     ██╔══██╗████╗  ██║██╔════╝██╔════╝    ██╔════╝██║     ██╔═══██╗██║    ██║" << endl;
-            cout << "                                                       █████╗  ██████╔╝█████╗  █████╗  ██║     ███████║██╔██╗ ██║██║     █████╗      █████╗  ██║     ██║   ██║██║ █╗ ██║" << endl;
-            cout << "                                                       ██╔══╝  ██╔══██╗██╔══╝  ██╔══╝  ██║     ██╔══██║██║╚██╗██║██║     ██╔══╝      ██╔══╝  ██║     ██║   ██║██║███╗██║" << endl;
-            cout << "                                                       ██║     ██║  ██║███████╗███████╗███████╗██║  ██║██║ ╚████║╚██████╗███████╗    ██║     ███████╗╚██████╔╝╚███╔███╔╝" << endl;
-            cout << "                                                       ╚═╝     ╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝╚══════╝    ╚═╝     ╚══════╝ ╚═════╝  ╚══╝╚══╝ " << endl
-                 << endl;
-            cout << "-----";
-            setColor(8);
-            cout << " FREELANCER : LOGIN IN ";
-            setColor(2);
-            cout << "--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------" << endl
-                 << endl;
-            setColor(15);
-            cout << endl;
-            cout << setw(116) << "1. Sign up\n"
-                 << setw(116) << "2. Sign in\n"
-                 << setw(115) << "0. Go Back" << endl;
-            cout << "Enter: ";
-            cin.clear();
-            cin.ignore(20, '\n');
-            cin >> input;
-            if (input == 0 && cin)
-                break;
-            while ((input > 2 || input < 0) || !cin)
-            {
-                system("cls");
-                cin.clear();
-                cin.ignore(100, '\n');
-                setColor(2);
-                cout << "-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------" << endl
-                     << endl
-                     << endl;
-                cout << "                                                       ███████╗██████╗ ███████╗███████╗██╗      █████╗ ███╗   ██╗ ██████╗███████╗    ███████╗██╗      ██████╗ ██╗    ██╗" << endl;
-                cout << "                                                       ██╔════╝██╔══██╗██╔════╝██╔════╝██║     ██╔══██╗████╗  ██║██╔════╝██╔════╝    ██╔════╝██║     ██╔═══██╗██║    ██║" << endl;
-                cout << "                                                       █████╗  ██████╔╝█████╗  █████╗  ██║     ███████║██╔██╗ ██║██║     █████╗      █████╗  ██║     ██║   ██║██║ █╗ ██║" << endl;
-                cout << "                                                       ██╔══╝  ██╔══██╗██╔══╝  ██╔══╝  ██║     ██╔══██║██║╚██╗██║██║     ██╔══╝      ██╔══╝  ██║     ██║   ██║██║███╗██║" << endl;
-                cout << "                                                       ██║     ██║  ██║███████╗███████╗███████╗██║  ██║██║ ╚████║╚██████╗███████╗    ██║     ███████╗╚██████╔╝╚███╔███╔╝" << endl;
-                cout << "                                                       ╚═╝     ╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝╚══════╝    ╚═╝     ╚══════╝ ╚═════╝  ╚══╝╚══╝ " << endl
-                     << endl;
-                cout << "-----";
-                setColor(8);
-                cout << " FREELANCER : LOGIN IN ";
-                setColor(2);
-                cout << "--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------" << endl
-                     << endl;
-                setColor(15);
-                cout << endl;
-                setColor(3);
-                cout << "Invalid Details Entered!" << endl;
-                setColor(15);
-                cout << "Please select the correct number" << endl;
-                cout << setw(116) << "1. Sign up\n"
-                     << setw(116) << "2. Sign in\n"
-                     << setw(115) << "0. Go Back" << endl;
-                cout << "Enter: ";
-                cin >> input;
-
-                if (input == 0 && cin)
-                    break;
-                cout << endl;
-                usertype = 0;
-            }
-            if (input == 1)
-            {
-                usertype = 0; // random initialize
-                for (int i = 0; i < 1000; i++)
-                {
-                    if (freelancerUserName[i] == " ")
-                    {
-
-                        cin.clear();
-                        cin.ignore(20, '\n');
-                        cout << setw(121) << "Enter Username: ";
-
-                        cin >> freelancerUserName[i];
-                        while (freelancerUserName[i].length() < 3)
-                        {
-
-                            cin.ignore();
-                            setColor(3);
-                            cout << "UserName should contain atleast 3 character's." << endl;
-                            setColor(15);
-                            cout << setw(121) << "Enter Username: ";
-                            cin >> freelancerUserName[i];
-                        }
-                        cin.ignore();
-                        cout << setw(121) << "Enter Password: ";
-                        cin >> freelancerPassword[i];
-
-                        while (freelancerPassword[i].length() < 8)
-                        {
-                            cin.ignore();
-                            cout << endl;
-                            setColor(3);
-                            cout << "Password should contain atleast 8 character's." << endl;
-                            setColor(15);
-                            cout << setw(121) << "Enter Password: ";
-                            cin >> freelancerPassword[i];
-                        }
-                        cin.ignore();
-                        cout << endl
-                             << endl;
-
-                        nichesShow(niches);
-                        cout << "Select Your Niche: ";
-                        getline(cin, freelancerNiche[i]);
-                        bool flag = false;
-                        while (flag == false)
-                        {
-                            for (int j = 0; j < 100; j++)
-                            {
-                                if (freelancerNiche[i] == niches[j])
-                                {
-                                    flag = true;
-                                    break;
-                                }
-                            }
-                            if (flag == true)
-                            {
-                                break;
-                            }
-                            setColor(3);
-                            cout << "Wrong Niche Selected (select from available one's)" << endl;
-                            setColor(15);
-                            cout << "Select Your Niche: ";
-                            getline(cin, freelancerNiche[i]);
-                        }
-                        Findex++;
-                        setColor(3);
-                        cout << "Account Created Successfully! " << endl;
-                        setColor(15);
-
-                        break;
-                    }
-                    if (freelancerUserName[999] != " ")
-                    {
-                        cout << "Account limit reached, unable to register more users" << endl;
-                        break;
-                    }
-                }
-            }
-            else if (input == 2)
-            {
-                cin.clear();
-                cin.ignore(30, '\n');
-                cout << setw(121) << "Enter Username: ";
-                getline(cin, username);
-                cout << setw(121) << "Enter Password: ";
-
-                char character;
-                password = "";
-                while ((character = _getch()) != '\r')
-                {
-                    if (character == '\b')
-                    {
-                        if (!password.empty())
-                        {
-                            password.pop_back();
-                            cout << "\b \b";
-                        }
-                    }
-                    else
-                    {
-                        password += character;
-                        cout << "*";
-                    }
-                }
-                cout << endl;
-
-                for (int i = 0; i < Findex; i++)
-                {
-                    if (username == freelancerUserName[i] && password == freelancerPassword[i])
-                    {
-                        usertype = 2;
-                        freelancerLogin[0][0] = freelancerUserName[i];
-                        freelancerLogin[0][1] = freelancerPassword[i];
-                        freelancerLogin[0][2] = freelancerNiche[i];
-                        freelancerLogin[0][3] = freelancerRating[i];
-                        freelancerLogin[0][4] = freelancerEarning[i];
-                        setColor(3);
-
-                        cout << setw(122) << "Logging In...." << endl;
-                        setColor(15);
-                        Sleep(1000);
-                        system("cls");
-                        break;
-                    }
-                    else if (username != freelancerUserName[i] || password != freelancerPassword[i])
-                    {
-                        usertype = -1;
-                    }
-                }
-            }
-
-            break;
-        case 3:
-            system("cls");
-            setColor(2);
-            cout << "-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------" << endl
-                 << endl
-                 << endl;
-            cout << "                                                       ███████╗██████╗ ███████╗███████╗██╗      █████╗ ███╗   ██╗ ██████╗███████╗    ███████╗██╗      ██████╗ ██╗    ██╗" << endl;
-            cout << "                                                       ██╔════╝██╔══██╗██╔════╝██╔════╝██║     ██╔══██╗████╗  ██║██╔════╝██╔════╝    ██╔════╝██║     ██╔═══██╗██║    ██║" << endl;
-            cout << "                                                       █████╗  ██████╔╝█████╗  █████╗  ██║     ███████║██╔██╗ ██║██║     █████╗      █████╗  ██║     ██║   ██║██║ █╗ ██║" << endl;
-            cout << "                                                       ██╔══╝  ██╔══██╗██╔══╝  ██╔══╝  ██║     ██╔══██║██║╚██╗██║██║     ██╔══╝      ██╔══╝  ██║     ██║   ██║██║███╗██║" << endl;
-            cout << "                                                       ██║     ██║  ██║███████╗███████╗███████╗██║  ██║██║ ╚████║╚██████╗███████╗    ██║     ███████╗╚██████╔╝╚███╔███╔╝" << endl;
-            cout << "                                                       ╚═╝     ╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝╚══════╝    ╚═╝     ╚══════╝ ╚═════╝  ╚══╝╚══╝ " << endl
-                 << endl;
-            cout << "-----";
-            setColor(8);
-            cout << " CLIENT : LOGIN IN ";
-            setColor(2);
-            cout << "-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------" << endl
-                 << endl;
-            setColor(15);
-            cout << setw(116) << "1. Sign up\n"
-                 << setw(116) << "2. Sign in\n"
-                 << setw(115) << "0. Go Back" << endl;
-            cout << "Enter: ";
-            cin.clear();
-            cin.ignore(100, '\n');
-            cin >> input;
-            if (input == 0 && cin)
-                break;
-            while ((input > 2 || input < 0) || !cin)
-            {
-                system("cls");
-                cin.clear();
-                cin.ignore(100, '\n');
-
-                setColor(2);
-                cout << "-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------" << endl
-                     << endl
-                     << endl;
-                cout << "                                                       ███████╗██████╗ ███████╗███████╗██╗      █████╗ ███╗   ██╗ ██████╗███████╗    ███████╗██╗      ██████╗ ██╗    ██╗" << endl;
-                cout << "                                                       ██╔════╝██╔══██╗██╔════╝██╔════╝██║     ██╔══██╗████╗  ██║██╔════╝██╔════╝    ██╔════╝██║     ██╔═══██╗██║    ██║" << endl;
-                cout << "                                                       █████╗  ██████╔╝█████╗  █████╗  ██║     ███████║██╔██╗ ██║██║     █████╗      █████╗  ██║     ██║   ██║██║ █╗ ██║" << endl;
-                cout << "                                                       ██╔══╝  ██╔══██╗██╔══╝  ██╔══╝  ██║     ██╔══██║██║╚██╗██║██║     ██╔══╝      ██╔══╝  ██║     ██║   ██║██║███╗██║" << endl;
-                cout << "                                                       ██║     ██║  ██║███████╗███████╗███████╗██║  ██║██║ ╚████║╚██████╗███████╗    ██║     ███████╗╚██████╔╝╚███╔███╔╝" << endl;
-                cout << "                                                       ╚═╝     ╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝╚══════╝    ╚═╝     ╚══════╝ ╚═════╝  ╚══╝╚══╝ " << endl
-                     << endl;
-                cout << "-----";
-                setColor(8);
-                cout << " CLIENT : LOGIN IN ";
-                setColor(2);
-                cout << "-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------" << endl
-                     << endl;
-                setColor(3);
-                cout << "Invalid Data Entered\n";
-                setColor(15);
-                cout << "Please select the correct number\n";
-                cout << setw(116) << "1. Sign up\n"
-                     << setw(116) << "2. Sign in\n"
-                     << setw(115) << "0. Go Back" << endl;
-                cout << "Enter: ";
-                cin >> input;
-
-                if (input == 0 && cin)
-                    break;
-                cout << endl;
-            }
-            if (input == 1)
-            {
-                usertype = 0;
-                for (int i = 0; i < 1000; i++)
-                {
-                    if (clientUserName[i] == "empty")
-                    {
-                        cin.ignore(20, '\n');
-                        cout << setw(121) << "Enter Username: ";
-                        cin >> clientUserName[i];
-
-                        while (clientUserName[i].length() < 3)
-                        {
-
-                            setColor(3);
-                            cout << "UserName should contain atleast 3 character's." << endl;
-                            setColor(15);
-                            cout << setw(121) << "Enter Username: ";
-                            cin >> clientUserName[i];
-                        }
-
-                        cout << setw(121) << "Enter Password: ";
-                        cin >> clientPassword[i];
-                        cin.ignore();
-                        while (clientPassword[i].length() < 8)
-                        {
-
-                            cout << endl;
-                            setColor(3);
-                            cout << "Password should contain atleast 8 character's." << endl;
-                            setColor(15);
-
-                            cout << setw(121) << "Enter Password: ";
-                            getline(cin, clientPassword[i]);
-                        }
-
-                        Cindex++;
-                        setColor(3);
-                        cout << "Account Created Successfully! " << endl;
-                        setColor(15);
-                        break;
-                    }
-                    if (clientUserName[999] != "empty")
-                    {
-                        cout << "Account limit reached, unable to register more users" << endl;
-                        break;
-                    }
-                }
-            }
-            else if (input == 2)
-            {
-                cin.clear();
-                cin.ignore(30, '\n');
-                cout << setw(121) << "Enter Username: ";
-                getline(cin, username);
-                cout << setw(121) << "Enter Password: ";
-
-                char character;
-                password = "";
-                while ((character = _getch()) != '\r')
-                {
-                    if (character == '\b')
-                    {
-                        if (!password.empty())
-                        {
-                            password.pop_back();
-                            cout << "\b \b";
-                        }
-                    }
-                    else
-                    {
-                        password += character;
-                        cout << "*";
-                    }
-                }
-                cout << endl;
-
-                for (int i = 0; i < Cindex; i++)
-                {
-                    if ((username == clientUserName[i]) && (password == clientPassword[i]))
-                    {
-                        usertype = 3;
-                        clientLogin[0][0] = clientUserName[i];
-                        clientLogin[0][1] = clientPassword[i];
-                        setColor(3);
-
-                        cout << setw(122) << "Logging In...." << endl;
-                        setColor(15);
-                        Sleep(1000);
-                        system("cls");
-                        break;
-                    }
-                    else if ((username != clientUserName[i]) || (password != clientPassword[i]))
-                    {
-                        usertype = -1;
-                    }
-                }
-            }
-            break;
-        default:
-            break;
-        } // switch end
-
-        if (usertype == 1) // admin menu
-        {
-            do
-            {
-                adminMenu();
-                cout << endl;
-                cout << "Enter: ";
-                cin >> input;
-                if (input == 0 && cin)
-                {
-                    cout << setw(115) << "Logging Out....." << endl;
-                    Sleep(1000);
-                    break;
-                }
-                while ((input > 7 || input < 0) || !cin)
-                {
-                    system("cls");
-                    cin.clear();
-                    cin.ignore(100, '\n');
-                    adminMenu();
-                    setColor(3);
-                    cout << "Invalid Details Entered!" << endl;
-                    setColor(15);
-                    cout << "Please select the correct number" << endl;
-                    cout << "Enter: ";
-                    cin >> input;
-                    cout << endl;
-                    if (input == 0 && cin)
-                    {
-                        cout << setw(115) << "Logging Out....." << endl;
-                        Sleep(1000);
-                        break;
-                    }
-                }
-                if (input == 1)
-                {
-                    freelancerStatistic(Findex, freelancerUserName, freelancerPassword, freelancerNiche, freelancerRating, freelancerEarning);
-                    // check freelancer statistics
-                }
-                else if (input == 2)
-                {
-                    clientStatistic(Cindex, clientUserName, clientPassword, clientNiche, clientSpend);
-                    // check client statistics
-                }
-                else if (input == 3)
-                {
-                    customerAddPolicy(headingCustomerPolicy, dataCustomerPolicy);
-                    // update customer policy function
-                }
-                else if (input == 4)
-                {
-                    string user = " ";
-                    int userRemoved = 5;
-                    system("cls");
-                    freelancerStatistic(Findex, freelancerUserName, freelancerPassword, freelancerNiche, freelancerRating, freelancerEarning);
-                    cout << endl;
-                    setColor(2);
-                    cout << "------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------" << endl
-                         << endl
-                         << endl;
-                    setColor(15);
-                    cout << "Enter Username to remove or press 0 to go back: ";
-                    cin.ignore(30, '\n');
-                    cin.clear();
-                    getline(cin, user);
-
-                    userRemoved = removeFreelancerAcc(Findex, user, freelancerUserName, freelancerPassword, freelancerNiche, freelancerRating, freelancerEarning, freelancerCustomerSupport);
-                    cin.clear();
-                    if (userRemoved == 1)
-                        cout << "Freelancer " << user << " Removed Successfully! " << endl;
-                    if (userRemoved == -1)
-                        cout << "No such Freelancer Account Exist in the system! " << endl;
-
-                    // remove freelancer function
-                }
-                else if (input == 5)
-                {
-                    string user = " ";
-                    int userRemoved = 5;
-                    system("cls");
-                    clientStatistic(Cindex, clientUserName, clientPassword, clientNiche, clientSpend);
-                    cout << endl;
-                    setColor(2);
-                    cout << "------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------" << endl
-                         << endl
-                         << endl;
-                    setColor(15);
-                    cout << "Enter Username to remove or press 0 to go back: ";
-                    cin.ignore(30, '\n');
-                    cin.clear();
-                    getline(cin, user);
-
-                    userRemoved = removeClientAcc(Cindex, rating, user, clientUserName, clientPassword, clientNiche, clientSpend, clientJobDescription, ratingCounter, clientPayment, clientCustomerSupport);
-                    cin.clear();
-                    if (userRemoved == 1)
-                        cout << "Client " << user << " Removed Successfully! " << endl;
-                    if (userRemoved == -1)
-                        cout << "No such Client Account Exist in the system! " << endl;
-                    // remove client function
-                }
-                else if (input == 6)
-                {
-                    customerSupport(freelancerCustomerSupport, clientCustomerSupport);
-                    // customer support function
-                }
-                else if (input == 7)
-                {
-                    adminAddNiches(niches);
-                    // add new niches
-                }
-            } while (input != 0);
-
-        } // admin menu end
-
-        if (usertype == 2)
-        {
-            do
-            {
-                freelancerMenu();
-                cout << "Enter: ";
-                cin >> input;
-                if (input == 0 && cin)
-                {
-                    cout << endl
-                         << "Logging Out....." << endl;
-                    Sleep(1000);
-                    system("cls");
-                    break;
-                }
-                while ((input > 5 || input < 0) || !cin)
-                {
-                    system("cls");
-                    cin.clear();
-                    cin.ignore(100, '\n');
-                    freelancerMenu();
-                    setColor(3);
-                    cout << "Invalid Details Entered!" << endl;
-                    setColor(15);
-                    cout << "Please select the correct number" << endl;
-                    cout << "Enter: ";
-                    cin >> input;
-                    cout << endl;
-                    if (input == 0 && cin)
-                    {
-                        cout << endl
-                             << "Logging Out....." << endl;
-                        Sleep(1000);
-                        system("cls");
-                        break;
-                    }
-                }
-                if (input == 1)
-                {
-                    jobSelection(Findex, Cindex, clientUserName, freelancerLogin, clientJobDescription, clientNiche, clientPayment, freelancerJobSelected, freelancerUserName);
-                    /*funtion call code*/
-                }
-                else if (input == 2)
-                {
-                    freelancerWorkSubmit(Findex, Cindex, freelancerLogin, freelancerUserName, freelancerJobSelected, clientUserName, clientJobDescription, clientNiche, clientPayment, freelancerEarning, ratingCounter, rating);
-                    /*function call code*/
-                }
-                else if (input == 3)
-                {
-                    freelancerEarnings(Findex, freelancerLogin, freelancerUserName, freelancerEarning, freelancerRating);
-                    /*function call code*/
-                }
-                else if (input == 4)
-                {
-                    customerSupportfreelancer(Findex, freelancerLogin, freelancerCustomerSupport, freelancerUserName);
-                    /*customer Support freelancer function */
-                }
-                else if (input == 5)
-                {
-                    customerPolicy(headingCustomerPolicy, dataCustomerPolicy);
-                    /*customerPolicy function */
-                }
-
-            } while (input != 0); // freelancer menu end
-        }
-        if (usertype == 3)
-        {
-            do
-            {
-
-                clientMenu();
-                cout << "Enter: ";
-                cin >> input;
-                if (input == 0 && cin)
-                {
-                    cout << endl
-                         << "Logging Out....." << endl;
-                    Sleep(1000);
-                    system("cls");
-                    break;
-                }
-                while ((input > 4 || input < 0) || !cin)
-                {
-                    system("cls");
-                    cin.clear();
-                    cin.ignore(100, '\n');
-                    clientMenu();
-                    setColor(3);
-                    cout << "Invalid Details Entered!" << endl;
-                    setColor(15);
-                    cout << "Please select the correct number" << endl;
-                    cout << "Enter: ";
-                    cin >> input;
-                    cout << endl;
-                    if (input == 0 && cin)
-                    {
-                        cout << endl
-                             << "Logging Out....." << endl;
-                        Sleep(1000);
-                        system("cls");
-                        break;
-                    }
-                }
-                if (input == 1)
-                {
-                    bool res = postJob(Cindex, niches, clientLogin, clientUserName, clientPassword, clientNiche, clientJobDescription, clientPayment, clientSpend, ratingCounter);
-                    if (res == 0)
-                    {
-                        setColor(3);
-                        cout << "\nMaximum Jobs are already Posted.\nCan not post more jobs!" << endl;
-                        setColor(15);
-                    }
-                    if (res == 1)
-                    {
-                        setColor(3);
-                        cout << "\nJob Posted Successfully!" << endl;
-                        setColor(15);
-                    }
-                    /*post job funtion */
-                }
-                else if (input == 2)
-                {
-                    pendingRating(Findex, Cindex, clientLogin, clientUserName, freelancerUserName, freelancerRating, ratingCounter, rating, clientJobDescription, clientPayment, clientNiche, ratingSum, ratingCount);
-                    /*function call code*/
-                }
-                else if (input == 3)
-                {
-                    customerPolicy(headingCustomerPolicy, dataCustomerPolicy);
-                    /*customer policy function */
-                }
-                else if (input == 4)
-                {
-                    customerSupportClient(Cindex, clientCustomerSupport, clientUserName);
-                    /*customer support client function call code*/
-                }
-
-            } while (input != 0); // client menu end
-        }
-
-        if (usertype == -1)
-        {
-            setColor(3);
-            cout << "Invalid Details Entered!" << endl;
-            setColor(15);
-        }
-
-        // last menu to check again
-
-        if (adminCounter == 2 || exit == true)
-        {
-            break; // break the loop if invalid credentials are entered twice
-        }
-        usertype = 0; // no garbage value
-        input = -1;   // so that it doesnot terminate the main loop
-
-    } while (input != 0); // change input to 0 to stop the program
-
-    storeData(freelancerUserName, freelancerPassword, freelancerRating, freelancerNiche, freelancerEarning,
-              ratingSum, ratingCount, freelancerCustomerSupport, Findex, clientUserName, clientPassword,
-              clientSpend, clientJobDescription, clientNiche, clientPayment, clientCustomerSupport,
-              ratingCounter, rating, Cindex, niches, headingCustomerPolicy, dataCustomerPolicy);
-
-    return 0;
 }

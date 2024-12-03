@@ -7,6 +7,32 @@
 
 using namespace std;
 
+struct freelancer
+{
+    string freelancerUserName;
+    string freelancerPassword;
+    string freelancerRating;
+    string freelancerNiche;
+    string freelancerCustomerSupport[2];
+    int freelancerEarning;
+    float ratingSum;
+    int ratingCount;
+    string freelancerJobSelected[4];
+};
+
+struct client
+{
+    string clientUserName;
+    string clientPassword;
+    string clientCustomerSupport[2];
+    int clientSpend;
+    string clientJobDescription[5];
+    string clientNiche[5];
+    int clientPayment[5];
+    int ratingCounter[5];
+    string rating[5][1];        // 1000 is client ,5 is niche and 1 is freelancer name
+};
+
 // Set console code page to UTF-8
 void setConsoleCodePage();
 
@@ -25,10 +51,10 @@ void clientMenu();
 // ADMIN FUNCTIONS
 
 // show all the detail of freelancers
-void freelancerStatistic(int Findex, string freelancerUserName[], string freelancerPassword[], string freelancerNiche[], string freelancerRating[], int freelancerEarning[]);
+void freelancerStatistic(int Findex, freelancer freelancers[]);
 
 // show all the detail of clients
-void clientStatistic(int Cindex, string clientUserName[], string clientPassword[], string clientNiche[1000][5], int clientSpend[]);
+void clientStatistic(int Cindex, client clients[]);
 
 // show all the detail of customer policy
 void customerPolicy(string headingCustomerPolicy[], string dataCustomerPolicy[]);
@@ -37,13 +63,13 @@ void customerPolicy(string headingCustomerPolicy[], string dataCustomerPolicy[])
 int customerAddPolicy(string headingCustomerPolicy[], string dataCustomerPolicy[]);
 
 // allow admin to delete freelancer account
-int removeFreelancerAcc(int &Findex, string user, string freelancerUserName[], string freelancerPassword[], string freelancerNiche[], string freelancerRating[], int freelancerEarning[], string freelancerCustomerSupport[1000][2]);
+int removeFreelancerAcc(int &Findex, string user, freelancer freelancers[]);
 
 // allow admin to delete client account
-int removeClientAcc(int &Cindex, string rating[1000][5][1], string user, string clientUserName[], string clientPassword[], string clientNiche[1000][5], int clientSpend[], string clientJobDescription[1000][5], int ratingCounter[1000][5], int clientPayment[1000][5], string clientCustomerSupport[1000][2]);
+int removeClientAcc(int &Cindex, string user, client clients[]);
 
 // show admin all the queries/suggesstion of freelancers and clients
-void customerSupport(string freelancerCustomerSupport[1000][2], string clientCustomerSupport[1000][2]);
+void customerSupport(freelancer freelancers[], client clients[]);
 
 // display all the niches which admin has allowed in the app
 void nichesShow(string niches[]);
@@ -54,72 +80,59 @@ int adminAddNiches(string niches[]);
 // FREELANCER FUNCTIONS
 
 // display the freelancer the jobs which match according to freelancer profession/skill
-void availableJob(int Cindex, string freelancerLogin[1][5], string clientUserName[], string clientJobDescription[1000][5], string clientNiche[1000][5], int clientPayment[1000][5]);
+void availableJob(int Cindex, string freelancerLogin[1][5], client clients[]);
 
 // allow freelancer to select the job from the available one's
-bool jobSelection(int Findex, int Cindex, string clientUserName[], string freelancerLogin[1][5], string clientJobDescription[1000][5], string clientNiche[1000][5], int clientPayment[1000][5], string freelancerJobSelected[1000][4], string freelancerUserName[]);
+bool jobSelection(int Findex, int Cindex, client clients[], string freelancerLogin[1][5], freelancer freelancers[]);
 
 // freelaner customer support section
-void customerSupportfreelancer(int Findex, string freelancerLogin[1][5], string freelancerCustomerSupport[1000][2], string freelancerUserName[]);
+void customerSupportfreelancer(int Findex, string freelancerLogin[1][5], freelancer freelancers[]);
 
 // freelancer work submit
-void freelancerWorkSubmit(int Findex, int Cindex, string freelancerLogin[1][5], string freelancerUserName[], string freelancerJobSelected[1000][4], string clientUserName[], string clientJobDescription[1000][5], string clientNiche[1000][5], int clientPayment[1000][5], int freelancerEarning[], int ratingCounter[1000][5], string rating[1000][5][1]);
+void freelancerWorkSubmit(int Findex, int Cindex, string freelancerLogin[1][5], freelancer freelancers[], client clients[]);
 
 // allow freelancer to widthdraw their money
-char widthdrawMoney(int Findex, string freelancerLogin[1][5], string freelancerUserName[], int freelancerEarning[]);
+char widthdrawMoney(int Findex, string freelancerLogin[1][5], freelancer freelancers[]);
 
 // display the freelancer his total earning
-void freelancerEarnings(int Findex, string freelancerLogin[1][5], string freelancerUserName[], int freelancerEarning[], string freelancerRating[]);
+void freelancerEarnings(int Findex, string freelancerLogin[1][5], freelancer freelancers[]);
 
 // CLIENT FUNCTIONS
 
 // allow clients to post their jobs
-bool postJob(int Cindex, string niches[], string clientLogin[1][3], string clientUserName[], string clientPassword[], string clientNiche[1000][5], string clientJobDescription[1000][5], int clientPayment[1000][5], int clientSpend[], int ratingCounter[1000][5]);
+bool postJob(int Cindex, string niches[], string clientLogin[][3], client clients[]);
 
 // freelaner customer support section
-void customerSupportClient(int Cindex, string clientCustomerSupport[1000][2], string clientUserName[]);
+void customerSupportClient(int Cindex,string clientLogin[][3], client clients[]);
 
 // Pending rating of freelancers
-void pendingRating(int Findex, int Cindex, string clientLogin[1][3], string clientUserName[], string freelancerUserName[], string freelancerRating[], int ratingCounter[1000][5], string rating[1000][5][1], string clientJobDescription[1000][5], int clientPayment[1000][5], string clientNiche[1000][5], float ratingSum[], int ratingCount[]);
+void pendingRating(int Findex, int Cindex, string clientLogin[][3], freelancer freelancers[], client clients[]);
 
 // LOAD DATA
 
 // load all the data from files
-void loadData(string freelancerUserName[], string freelancerPassword[], string freelancerRating[], string freelancerNiche[], int freelancerEarning[], float ratingSum[], int ratingCount[], string freelancerCustomerSupport[][2], int &Findex, string clientUserName[], string clientPassword[], int clientSpend[], string clientJobDescription[][5], string clientNiche[][5], int clientPayment[][5], string clientCustomerSupport[][2], int ratingCounter[][5], string rating[][5][1], int &Cindex, string niches[], string headingCustomerPolicy[], string dataCustomerPolicy[]);
+void loadData(freelancer freelancers[], int &Findex, client clients[], int &Cindex, string niches[], string headingCustomerPolicy[], string dataCustomerPolicy[]);
 
 // store all the data to files
-void storeData(string freelancerUserName[], string freelancerPassword[], string freelancerRating[], string freelancerNiche[], int freelancerEarning[], float ratingSum[], int ratingCount[], string freelancerCustomerSupport[][2], int Findex, string clientUserName[], string clientPassword[], int clientSpend[], string clientJobDescription[][5], string clientNiche[][5], int clientPayment[][5], string clientCustomerSupport[][2], int ratingCounter[][5], string rating[][5][1], int Cindex, string niches[], string headingCustomerPolicy[], string dataCustomerPolicy[]);
+void storeData(freelancer freelancers[], int Findex, client clients[], int Cindex, string niches[], string headingCustomerPolicy[], string dataCustomerPolicy[]);
 
-void initilizeData(string freelancerUserName[], string freelancerPassword[], string freelancerRating[], string freelancerNiche[], string clientUserName[], string clientPassword[], string freelancerCustomerSupport[1000][2], string clientCustomerSupport[1000][2], int freelancerEarning[1000], int clientSpend[1000], string headingCustomerPolicy[1000], string dataCustomerPolicy[1000], string niches[100], string clientJobDescription[1000][5], string clientNiche[1000][5], int clientPayment[1000][5], int ratingCounter[1000][5], string freelancerJobSelected[1000][4], float ratingSum[1000], int ratingCount[1000], string rating[1000][5][1]);
+void initilizeData(freelancer freelancers[], client clients[], string headingCustomerPolicy[1000], string dataCustomerPolicy[1000], string niches[100],  string freelancerLogin[][5],string clientLogin[][3]);
 
 // temporary 2d array to store data
-string freelancerLogin[1][5];
-string clientLogin[1][3];
 
 int main()
 {
 
+    string clientLogin[1][3];
+    string freelancerLogin[1][5];
+
     int Findex = 0, Cindex = 0;
 
-    string freelancerUserName[1000], freelancerPassword[1000], freelancerRating[1000], freelancerNiche[1000];
-    string clientUserName[1000], clientPassword[1000];
-    string freelancerCustomerSupport[1000][2];
-    string clientCustomerSupport[1000][2];
-    int freelancerEarning[1000], clientSpend[1000];
+    freelancer freelancers[1000];
+    client clients[1000];
 
     string headingCustomerPolicy[1000], dataCustomerPolicy[1000];
     string niches[100]; // contain all allowed niches
-
-    string clientJobDescription[1000][5], clientNiche[1000][5];
-    int clientPayment[1000][5];
-    int ratingCounter[1000][5];
-
-    string freelancerJobSelected[1000][4];
-
-    float ratingSum[1000];
-    int ratingCount[1000];
-
-    string rating[1000][5][1]; // 1000 is client ,5 is niche and 1 is freelancer name
 
     niches[0] = "Graphic Designing";
     niches[1] = "Web Development";
@@ -132,15 +145,9 @@ int main()
     niches[8] = "Machine Learning";
     niches[9] = "AI Learning";
 
-    initilizeData(freelancerUserName, freelancerPassword, freelancerRating, freelancerNiche, clientUserName, clientPassword,
-                  freelancerCustomerSupport, clientCustomerSupport, freelancerEarning, clientSpend, headingCustomerPolicy,
-                  dataCustomerPolicy, niches, clientJobDescription, clientNiche, clientPayment, ratingCounter, freelancerJobSelected,
-                  ratingSum, ratingCount, rating);
+    initilizeData(freelancers, clients, headingCustomerPolicy, dataCustomerPolicy, niches, freelancerLogin,clientLogin);
 
-    loadData(freelancerUserName, freelancerPassword, freelancerRating, freelancerNiche, freelancerEarning,
-             ratingSum, ratingCount, freelancerCustomerSupport, Findex, clientUserName, clientPassword,
-             clientSpend, clientJobDescription, clientNiche, clientPayment, clientCustomerSupport,
-             ratingCounter, rating, Cindex, niches, headingCustomerPolicy, dataCustomerPolicy);
+    loadData(freelancers, Findex, clients, Cindex, niches, headingCustomerPolicy, dataCustomerPolicy);
 
     string username, password;
     int input = 0;
@@ -382,15 +389,15 @@ int main()
                 usertype = 0; // random initialize
                 for (int i = 0; i < 1000; i++)
                 {
-                    if (freelancerUserName[i] == " ")
+                    if (freelancers[i].freelancerUserName == " ")
                     {
 
                         cin.clear();
                         cin.ignore(20, '\n');
                         cout << setw(121) << "Enter Username: ";
 
-                        cin >> freelancerUserName[i];
-                        while (freelancerUserName[i].length() < 3)
+                        cin >> freelancers[i].freelancerUserName;
+                        while (freelancers[i].freelancerUserName.length() < 3)
                         {
 
                             cin.ignore();
@@ -398,13 +405,13 @@ int main()
                             cout << "UserName should contain atleast 3 character's." << endl;
                             setColor(15);
                             cout << setw(121) << "Enter Username: ";
-                            cin >> freelancerUserName[i];
+                            cin >> freelancers[i].freelancerUserName;
                         }
                         cin.ignore();
                         cout << setw(121) << "Enter Password: ";
-                        cin >> freelancerPassword[i];
+                        cin >> freelancers[i].freelancerPassword;
 
-                        while (freelancerPassword[i].length() < 8)
+                        while (freelancers[i].freelancerPassword.length() < 8)
                         {
                             cin.ignore();
                             cout << endl;
@@ -412,7 +419,7 @@ int main()
                             cout << "Password should contain atleast 8 character's." << endl;
                             setColor(15);
                             cout << setw(121) << "Enter Password: ";
-                            cin >> freelancerPassword[i];
+                            cin >> freelancers[i].freelancerPassword;
                         }
                         cin.ignore();
                         cout << endl
@@ -420,13 +427,13 @@ int main()
 
                         nichesShow(niches);
                         cout << "Select Your Niche: ";
-                        getline(cin, freelancerNiche[i]);
+                        getline(cin, freelancers[i].freelancerNiche);
                         bool flag = false;
                         while (flag == false)
                         {
                             for (int j = 0; j < 100; j++)
                             {
-                                if (freelancerNiche[i] == niches[j])
+                                if (freelancers[i].freelancerNiche == niches[j])
                                 {
                                     flag = true;
                                     break;
@@ -440,7 +447,7 @@ int main()
                             cout << "Wrong Niche Selected (select from available one's)" << endl;
                             setColor(15);
                             cout << "Select Your Niche: ";
-                            getline(cin, freelancerNiche[i]);
+                            getline(cin, freelancers[i].freelancerNiche);
                         }
                         Findex++;
                         setColor(3);
@@ -449,7 +456,7 @@ int main()
 
                         break;
                     }
-                    if (freelancerUserName[999] != " ")
+                    if (freelancers[999].freelancerUserName != " ")
                     {
                         cout << "Account limit reached, unable to register more users" << endl;
                         break;
@@ -486,14 +493,14 @@ int main()
 
                 for (int i = 0; i < Findex; i++)
                 {
-                    if (username == freelancerUserName[i] && password == freelancerPassword[i])
+                    if (username == freelancers[i].freelancerUserName && password == freelancers[i].freelancerPassword)
                     {
                         usertype = 2;
-                        freelancerLogin[0][0] = freelancerUserName[i];
-                        freelancerLogin[0][1] = freelancerPassword[i];
-                        freelancerLogin[0][2] = freelancerNiche[i];
-                        freelancerLogin[0][3] = freelancerRating[i];
-                        freelancerLogin[0][4] = freelancerEarning[i];
+                        freelancerLogin[0][0] = freelancers[i].freelancerUserName;
+                        freelancerLogin[0][1] = freelancers[i].freelancerPassword;
+                        freelancerLogin[0][2] = freelancers[i].freelancerNiche;
+                        freelancerLogin[0][3] = freelancers[i].freelancerRating;
+                        freelancerLogin[0][4] = freelancers[i].freelancerEarning;
                         setColor(3);
 
                         cout << setw(122) << "Logging In...." << endl;
@@ -502,7 +509,7 @@ int main()
                         system("cls");
                         break;
                     }
-                    else if (username != freelancerUserName[i] || password != freelancerPassword[i])
+                    else if (username != freelancers[i].freelancerUserName || password != freelancers[i].freelancerPassword)
                     {
                         usertype = -1;
                     }
@@ -584,26 +591,26 @@ int main()
                 usertype = 0;
                 for (int i = 0; i < 1000; i++)
                 {
-                    if (clientUserName[i] == "empty")
+                    if (clients[i].clientUserName == "empty")
                     {
                         cin.ignore(20, '\n');
                         cout << setw(121) << "Enter Username: ";
-                        cin >> clientUserName[i];
+                        cin >> clients[i].clientUserName;
 
-                        while (clientUserName[i].length() < 3)
+                        while (clients[i].clientUserName.length() < 3)
                         {
 
                             setColor(3);
                             cout << "UserName should contain atleast 3 character's." << endl;
                             setColor(15);
                             cout << setw(121) << "Enter Username: ";
-                            cin >> clientUserName[i];
+                            cin >> clients[i].clientUserName;
                         }
 
                         cout << setw(121) << "Enter Password: ";
-                        cin >> clientPassword[i];
+                        cin >> clients[i].clientPassword;
                         cin.ignore();
-                        while (clientPassword[i].length() < 8)
+                        while (clients[i].clientPassword.length() < 8)
                         {
 
                             cout << endl;
@@ -612,7 +619,8 @@ int main()
                             setColor(15);
 
                             cout << setw(121) << "Enter Password: ";
-                            getline(cin, clientPassword[i]);
+                            cin >> clients[i].clientPassword;
+
                         }
 
                         Cindex++;
@@ -621,7 +629,7 @@ int main()
                         setColor(15);
                         break;
                     }
-                    if (clientUserName[999] != "empty")
+                    if (clients[999].clientUserName != "empty")
                     {
                         cout << "Account limit reached, unable to register more users" << endl;
                         break;
@@ -658,11 +666,11 @@ int main()
 
                 for (int i = 0; i < Cindex; i++)
                 {
-                    if ((username == clientUserName[i]) && (password == clientPassword[i]))
+                    if ((username == clients[i].clientUserName) && (password == clients[i].clientPassword))
                     {
                         usertype = 3;
-                        clientLogin[0][0] = clientUserName[i];
-                        clientLogin[0][1] = clientPassword[i];
+                        clientLogin[0][0] = clients[i].clientUserName;
+                        clientLogin[0][1] = clients[i].clientPassword;
                         setColor(3);
 
                         cout << setw(122) << "Logging In...." << endl;
@@ -671,7 +679,7 @@ int main()
                         system("cls");
                         break;
                     }
-                    else if ((username != clientUserName[i]) || (password != clientPassword[i]))
+                    else if ((username != clients[i].clientUserName) || (password != clients[i].clientPassword))
                     {
                         usertype = -1;
                     }
@@ -720,12 +728,12 @@ int main()
                 }
                 if (input == 1)
                 {
-                    freelancerStatistic(Findex, freelancerUserName, freelancerPassword, freelancerNiche, freelancerRating, freelancerEarning);
+                    freelancerStatistic(Findex, freelancers);
                     // check freelancer statistics
                 }
                 else if (input == 2)
                 {
-                    clientStatistic(Cindex, clientUserName, clientPassword, clientNiche, clientSpend);
+                    clientStatistic(Cindex, clients);
                     // check client statistics
                 }
                 else if (input == 3)
@@ -738,7 +746,7 @@ int main()
                     string user = " ";
                     int userRemoved = 5;
                     system("cls");
-                    freelancerStatistic(Findex, freelancerUserName, freelancerPassword, freelancerNiche, freelancerRating, freelancerEarning);
+                    freelancerStatistic(Findex, freelancers);
                     cout << endl;
                     setColor(2);
                     cout << "------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------" << endl
@@ -750,7 +758,7 @@ int main()
                     cin.clear();
                     getline(cin, user);
 
-                    userRemoved = removeFreelancerAcc(Findex, user, freelancerUserName, freelancerPassword, freelancerNiche, freelancerRating, freelancerEarning, freelancerCustomerSupport);
+                    userRemoved = removeFreelancerAcc(Findex, user, freelancers);
                     cin.clear();
                     if (userRemoved == 1)
                         cout << "Freelancer " << user << " Removed Successfully! " << endl;
@@ -764,7 +772,7 @@ int main()
                     string user = " ";
                     int userRemoved = 5;
                     system("cls");
-                    clientStatistic(Cindex, clientUserName, clientPassword, clientNiche, clientSpend);
+                    clientStatistic(Cindex, clients);
                     cout << endl;
                     setColor(2);
                     cout << "------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------" << endl
@@ -776,7 +784,7 @@ int main()
                     cin.clear();
                     getline(cin, user);
 
-                    userRemoved = removeClientAcc(Cindex, rating, user, clientUserName, clientPassword, clientNiche, clientSpend, clientJobDescription, ratingCounter, clientPayment, clientCustomerSupport);
+                    userRemoved = removeClientAcc(Cindex, user, clients);
                     cin.clear();
                     if (userRemoved == 1)
                         cout << "Client " << user << " Removed Successfully! " << endl;
@@ -786,7 +794,7 @@ int main()
                 }
                 else if (input == 6)
                 {
-                    customerSupport(freelancerCustomerSupport, clientCustomerSupport);
+                    customerSupport(freelancers, clients);
                     // customer support function
                 }
                 else if (input == 7)
@@ -837,22 +845,22 @@ int main()
                 }
                 if (input == 1)
                 {
-                    jobSelection(Findex, Cindex, clientUserName, freelancerLogin, clientJobDescription, clientNiche, clientPayment, freelancerJobSelected, freelancerUserName);
+                    jobSelection(Findex, Cindex, clients, freelancerLogin, freelancers);
                     /*funtion call code*/
                 }
                 else if (input == 2)
                 {
-                    freelancerWorkSubmit(Findex, Cindex, freelancerLogin, freelancerUserName, freelancerJobSelected, clientUserName, clientJobDescription, clientNiche, clientPayment, freelancerEarning, ratingCounter, rating);
+                    freelancerWorkSubmit(Findex, Cindex, freelancerLogin, freelancers, clients);
                     /*function call code*/
                 }
                 else if (input == 3)
                 {
-                    freelancerEarnings(Findex, freelancerLogin, freelancerUserName, freelancerEarning, freelancerRating);
+                    freelancerEarnings(Findex, freelancerLogin, freelancers);
                     /*function call code*/
                 }
                 else if (input == 4)
                 {
-                    customerSupportfreelancer(Findex, freelancerLogin, freelancerCustomerSupport, freelancerUserName);
+                    customerSupportfreelancer(Findex, freelancerLogin, freelancers);
                     /*customer Support freelancer function */
                 }
                 else if (input == 5)
@@ -903,7 +911,7 @@ int main()
                 }
                 if (input == 1)
                 {
-                    bool res = postJob(Cindex, niches, clientLogin, clientUserName, clientPassword, clientNiche, clientJobDescription, clientPayment, clientSpend, ratingCounter);
+                    bool res = postJob(Cindex, niches, clientLogin, clients);
                     if (res == 0)
                     {
                         setColor(3);
@@ -920,7 +928,7 @@ int main()
                 }
                 else if (input == 2)
                 {
-                    pendingRating(Findex, Cindex, clientLogin, clientUserName, freelancerUserName, freelancerRating, ratingCounter, rating, clientJobDescription, clientPayment, clientNiche, ratingSum, ratingCount);
+                    pendingRating(Findex, Cindex, clientLogin, freelancers, clients);
                     /*function call code*/
                 }
                 else if (input == 3)
@@ -930,7 +938,7 @@ int main()
                 }
                 else if (input == 4)
                 {
-                    customerSupportClient(Cindex, clientCustomerSupport, clientUserName);
+                    customerSupportClient(Cindex,clientLogin ,clients);
                     /*customer support client function call code*/
                 }
 
@@ -955,10 +963,7 @@ int main()
 
     } while (input != 0); // change input to 0 to stop the program
 
-    storeData(freelancerUserName, freelancerPassword, freelancerRating, freelancerNiche, freelancerEarning,
-              ratingSum, ratingCount, freelancerCustomerSupport, Findex, clientUserName, clientPassword,
-              clientSpend, clientJobDescription, clientNiche, clientPayment, clientCustomerSupport,
-              ratingCounter, rating, Cindex, niches, headingCustomerPolicy, dataCustomerPolicy);
+    storeData(freelancers, Findex, clients, Cindex, niches, headingCustomerPolicy, dataCustomerPolicy);
 
     return 0;
 }
@@ -1075,7 +1080,7 @@ void clientMenu()
 ///////////////////////////////// ADMIN FUNCTION //////////////////////////////
 
 // show all the detail of freelancers
-void freelancerStatistic(int Findex, string freelancerUserName[], string freelancerPassword[], string freelancerNiche[], string freelancerRating[], int freelancerEarning[])
+void freelancerStatistic(int Findex, freelancer freelancers[])
 {
     system("cls");
     cout << setw(120) << " Freelancer Statistics " << endl;
@@ -1091,7 +1096,7 @@ void freelancerStatistic(int Findex, string freelancerUserName[], string freelan
     setColor(15);
 
     // if there is no freelancer then prompt the message
-    if (freelancerUserName[0] == " " && freelancerPassword[0] == " ")
+    if (freelancers[0].freelancerUserName == " " && freelancers[0].freelancerPassword == " ")
     {
         cout << "No User(s) Registered Yet! " << endl
              << endl
@@ -1101,9 +1106,9 @@ void freelancerStatistic(int Findex, string freelancerUserName[], string freelan
     for (int i = 0; i < Findex; i++)
     {
         // if freelancer found display all the details of the freelancer
-        if (freelancerUserName[i] != " " && freelancerPassword[i] != " ")
+        if (freelancers[i].freelancerUserName != " " && freelancers[0].freelancerPassword != " ")
         {
-            cout << setw(25) << i + 1 << setw(45) << freelancerUserName[i] << setw(45) << freelancerPassword[i] << setw(40) << freelancerNiche[i] << setw(35) << fixed << setprecision(1) << freelancerRating[i] << setw(30) << freelancerEarning[i] << endl
+            cout << setw(25) << i + 1 << setw(45) << freelancers[i].freelancerUserName << setw(45) << freelancers[i].freelancerPassword << setw(40) << freelancers[i].freelancerNiche << setw(35) << fixed << setprecision(1) << freelancers[i].freelancerRating << setw(30) << freelancers[i].freelancerEarning << endl
                  << endl;
         }
     }
@@ -1113,7 +1118,7 @@ void freelancerStatistic(int Findex, string freelancerUserName[], string freelan
 }
 
 // show all the detail of clients
-void clientStatistic(int Cindex, string clientUserName[], string clientPassword[], string clientNiche[1000][5], int clientSpend[])
+void clientStatistic(int Cindex, client clients[])
 {
     system("cls");
     cout << setw(120) << " Client Statistics " << endl;
@@ -1129,7 +1134,7 @@ void clientStatistic(int Cindex, string clientUserName[], string clientPassword[
     setColor(15);
 
     // if there is no client then prompt the message
-    if (clientUserName[0] == "empty" && clientPassword[0] == "empty")
+    if (clients[0].clientUserName == "empty" && clients[0].clientPassword == "empty")
     {
         cout << "No User(s) Registered Yet! " << endl
              << endl
@@ -1139,9 +1144,9 @@ void clientStatistic(int Cindex, string clientUserName[], string clientPassword[
     for (int i = 0; i < Cindex; i++)
     {
         // if client found display all the details of the clients
-        if (clientUserName[i] != "empty" && clientPassword[i] != "empty")
+        if (clients[i].clientUserName != "empty" && clients[i].clientPassword != "empty")
         {
-            cout << setw(40) << i + 1 << setw(60) << clientUserName[i] << setw(60) << clientPassword[i] << setw(60) << clientSpend[i];
+            cout << setw(40) << i + 1 << setw(60) << clients[i].clientUserName << setw(60) << clients[i].clientPassword << setw(60) << clients[i].clientSpend;
 
             cout << endl
                  << endl;
@@ -1294,7 +1299,7 @@ int customerAddPolicy(string headingCustomerPolicy[], string dataCustomerPolicy[
 }
 
 // allow admin to delete freelancer account
-int removeFreelancerAcc(int &Findex, string user, string freelancerUserName[], string freelancerPassword[], string freelancerNiche[], string freelancerRating[], int freelancerEarning[], string freelancerCustomerSupport[1000][2])
+int removeFreelancerAcc(int &Findex, string user, freelancer freelancers[])
 {
     int result = -1;
     if (user == "0")
@@ -1308,18 +1313,18 @@ int removeFreelancerAcc(int &Findex, string user, string freelancerUserName[], s
     for (int i = 0; i < Findex; i++)
     {
         // search if the match found with the search name in the files
-        if (freelancerUserName[i] == user)
+        if (freelancers[i].freelancerUserName == user)
         {
             // if name is found deletes its data
-            freelancerUserName[i] = " ";
-            freelancerPassword[i] = " ";
-            freelancerRating[i] = "N/A";
-            freelancerEarning[i] = 0;
-            freelancerNiche[i] = " ";
+            freelancers[i].freelancerUserName = " ";
+            freelancers[i].freelancerPassword = " ";
+            freelancers[i].freelancerRating = "N/A";
+            freelancers[i].freelancerEarning = 0;
+            freelancers[i].freelancerNiche = " ";
 
             for (int n = 0; n < 2; n++)
             {
-                freelancerCustomerSupport[i][n] = " ";
+                freelancers[i].freelancerCustomerSupport[n] = " ";
             }
 
             result = 1;
@@ -1327,15 +1332,15 @@ int removeFreelancerAcc(int &Findex, string user, string freelancerUserName[], s
             // move all the data of freelancer next to the user removed one space back to maintain in consistent order
             for (int j = i; j < Findex - 1; j++)
             {
-                freelancerUserName[j] = freelancerUserName[j + 1];
-                freelancerPassword[j] = freelancerPassword[j + 1];
-                freelancerRating[j] = freelancerRating[j + 1];
-                freelancerEarning[j] = freelancerEarning[j + 1];
-                freelancerNiche[j] = freelancerNiche[j + 1];
+                freelancers[j].freelancerUserName = freelancers[j + 1].freelancerUserName;
+                freelancers[j].freelancerPassword = freelancers[j + 1].freelancerPassword;
+                freelancers[j].freelancerRating = freelancers[j + 1].freelancerRating;
+                freelancers[j].freelancerEarning = freelancers[j + 1].freelancerEarning;
+                freelancers[j].freelancerNiche = freelancers[j + 1].freelancerNiche;
 
                 for (int n = 0; n < 2; n++)
                 {
-                    freelancerCustomerSupport[j][n] = freelancerCustomerSupport[j + 1][n];
+                    freelancers[j].freelancerCustomerSupport[n] = freelancers[j + 1].freelancerCustomerSupport[n];
                 }
             }
 
@@ -1344,15 +1349,15 @@ int removeFreelancerAcc(int &Findex, string user, string freelancerUserName[], s
     }
 
     // initialize the last freelancer properly to avoid any unexcepted data
-    freelancerUserName[Findex - 1] = " ";
-    freelancerPassword[Findex - 1] = " ";
-    freelancerRating[Findex - 1] = "N/A";
-    freelancerEarning[Findex - 1] = 0;
-    freelancerNiche[Findex - 1] = " ";
+    freelancers[Findex - 1].freelancerUserName = " ";
+    freelancers[Findex - 1].freelancerPassword = " ";
+    freelancers[Findex - 1].freelancerRating = "N/A";
+    freelancers[Findex - 1].freelancerEarning = 0;
+    freelancers[Findex - 1].freelancerNiche = " ";
 
     for (int n = 0; n < 2; n++)
     {
-        freelancerCustomerSupport[Findex - 1][n] = " ";
+        freelancers[Findex - 1].freelancerCustomerSupport[n] = " ";
     }
 
     // Findex decreases
@@ -1362,7 +1367,7 @@ int removeFreelancerAcc(int &Findex, string user, string freelancerUserName[], s
 }
 
 // allow admin to delete client account
-int removeClientAcc(int &Cindex, string rating[1000][5][1], string user, string clientUserName[], string clientPassword[], string clientNiche[1000][5], int clientSpend[], string clientJobDescription[1000][5], int ratingCounter[1000][5], int clientPayment[1000][5], string clientCustomerSupport[1000][2])
+int removeClientAcc(int &Cindex, string user, client clients[])
 {
     int result = -1;
     if (user == "0")
@@ -1376,62 +1381,62 @@ int removeClientAcc(int &Cindex, string rating[1000][5][1], string user, string 
     for (int i = 0; i < Cindex; i++)
     {
         // search if the match found with the search name in the files
-        if (clientUserName[i] == user)
+        if (clients[i].clientUserName == user)
         {
             // if name is found deletes its data
-            clientUserName[i] = "empty";
-            clientPassword[i] = "empty";
-            clientSpend[i] = 0;
+            clients[i].clientUserName = "empty";
+            clients[i].clientPassword = "empty";
+            clients[i].clientSpend = 0;
             for (int k = 0; k < 5; k++)
             {
-                clientNiche[i][k] = "empty";
-                clientJobDescription[i][k] = "empty";
-                rating[i][k][0] = "empty";
-                ratingCounter[i][k] = {0};
-                clientPayment[i][k] = {0};
+                clients[i].clientNiche[k] = "empty";
+                clients[i].clientJobDescription[k] = "empty";
+                clients[i].rating[k][0] = "empty";
+                clients[i].ratingCounter[k] = {0};
+                clients[i].clientPayment[k] = {0};
             }
             for (int n = 0; n < 2; n++)
             {
-                clientCustomerSupport[i][n] = "empty";
+                clients[i].clientCustomerSupport[n] = "empty";
             }
 
             for (int j = i; j < Cindex - 1; j++)
             {
                 // move all the data of client next to the user removed one space back to maintain in consistent order
-                clientUserName[j] = clientUserName[j + 1];
-                clientPassword[j] = clientPassword[j + 1];
-                clientSpend[j] = clientSpend[j + 1];
+                clients[j].clientUserName = clients[j + 1].clientUserName;
+                clients[j].clientPassword = clients[j + 1].clientPassword;
+                clients[j].clientSpend = clients[j + 1].clientSpend;
                 for (int m = 0; m < 5; m++)
                 {
-                    clientNiche[j][m] = clientNiche[j + 1][m];
-                    clientJobDescription[j][m] = clientJobDescription[j + 1][m];
-                    ratingCounter[j][m] = ratingCounter[j + 1][m];
-                    clientPayment[j][m] = clientPayment[j + 1][m];
-                    rating[j][m][0] = rating[j + 1][m][0];
+                    clients[j].clientNiche[m] = clients[j + 1].clientNiche[m];
+                    clients[j].clientJobDescription[m] = clients[j + 1].clientJobDescription[m];
+                    clients[j].ratingCounter[m] = clients[j + 1].ratingCounter[m];
+                    clients[j].clientPayment[m] = clients[j + 1].clientPayment[m];
+                    clients[j].rating[m][0] = clients[j + 1].rating[m][0];
                 }
                 for (int n = 0; n < 2; n++)
                 {
-                    clientCustomerSupport[j][n] = clientCustomerSupport[j + 1][n];
+                    clients[j].clientCustomerSupport[n] = clients[j + 1].clientCustomerSupport[n];
                 }
             }
 
             // delete the last value as all data is moved one step back
-            clientUserName[Cindex - 1] = "empty";
-            clientPassword[Cindex - 1] = "empty";
-            clientSpend[Cindex - 1] = 0;
+            clients[Cindex - 1].clientUserName = "empty";
+            clients[Cindex - 1].clientPassword = "empty";
+            clients[Cindex - 1].clientSpend = 0;
 
             for (int k = 0; k < 5; k++)
             {
-                clientNiche[Cindex - 1][k] = "empty";
-                clientJobDescription[Cindex - 1][k] = "empty";
-                ratingCounter[Cindex - 1][k] = 0;
-                clientPayment[Cindex - 1][k] = 0;
-                rating[Cindex - 1][k][0] = "empty";
+                clients[Cindex - 1].clientNiche[k] = "empty";
+                clients[Cindex - 1].clientJobDescription[k] = "empty";
+                clients[Cindex - 1].ratingCounter[k] = 0;
+                clients[Cindex - 1].clientPayment[k] = 0;
+                clients[Cindex - 1].rating[k][0] = "empty";
             }
 
             for (int n = 0; n < 2; n++)
             {
-                clientCustomerSupport[Cindex - 1][n] = "empty";
+                clients[Cindex - 1].clientCustomerSupport[n] = "empty";
             }
 
             // Cindex decreases
@@ -1445,7 +1450,7 @@ int removeClientAcc(int &Cindex, string rating[1000][5][1], string user, string 
 }
 
 // show admin all the queries/suggesstion of freelancers and clients
-void customerSupport(string freelancerCustomerSupport[1000][2], string clientCustomerSupport[1000][2])
+void customerSupport(freelancer freelancers[], client clients[])
 {
     system("cls");
     const string bold = "\033[1m";
@@ -1461,14 +1466,14 @@ void customerSupport(string freelancerCustomerSupport[1000][2], string clientCus
     for (int i = 0; i < 1000; i++)
     {
         // if freelancer Customer support data is not empty then show the customer support message to the admin
-        if (freelancerCustomerSupport[i][1] != " ")
+        if (freelancers[i].freelancerCustomerSupport[1] != " ")
         {
             setColor(3);
-            cout << bold << "====== " << i + 1 << "." << freelancerCustomerSupport[i][0] << " ======" << reset << "\n";
+            cout << bold << "====== " << i + 1 << "." << freelancers[i].freelancerCustomerSupport[0] << " ======" << reset << "\n";
             setColor(15);
-            cout << freelancerCustomerSupport[i][1] << endl;
+            cout << freelancers[i].freelancerCustomerSupport[1] << endl;
         }
-        else if (freelancerCustomerSupport[0][1] == " ")
+        else if (freelancers[0].freelancerCustomerSupport[1] == " ")
         {
             cout << "No freelancer has submitted any Query/Suggesstion." << endl;
             break;
@@ -1487,14 +1492,14 @@ void customerSupport(string freelancerCustomerSupport[1000][2], string clientCus
     for (int i = 0; i < 1000; i++)
     {
         // if client Customer support data is not empty then show the customer support message to the admin
-        if (clientCustomerSupport[i][1] != "empty")
+        if (clients[i].clientCustomerSupport[1] != "empty")
         {
             setColor(3);
-            cout << bold << "====== " << i + 1 << "." << clientCustomerSupport[i][0] << " ======" << reset << "\n";
+            cout << bold << "====== " << i + 1 << "." << clients[i].clientCustomerSupport[0] << " ======" << reset << "\n";
             setColor(15);
-            cout << clientCustomerSupport[i][1] << endl;
+            cout << clients[i].clientCustomerSupport[1] << endl;
         }
-        else if (clientCustomerSupport[0][1] == "empty")
+        else if (clients[0].clientCustomerSupport[1] == "empty")
         {
             cout << "No Client has submitted any Query/Suggesstion.";
             break;
@@ -1591,7 +1596,7 @@ int adminAddNiches(string niches[])
 /////////////////////////////////FREELANCER FUNCTION //////////////////////////////
 
 // display the freelancer the jobs which match according to freelancer profession/skill
-void availableJob(int Cindex, string freelancerLogin[1][5], string clientUserName[], string clientJobDescription[1000][5], string clientNiche[1000][5], int clientPayment[1000][5])
+void availableJob(int Cindex, string freelancerLogin[1][5], client clients[])
 {
     system("cls");
     const string bold = "\033[1m";
@@ -1611,10 +1616,10 @@ void availableJob(int Cindex, string freelancerLogin[1][5], string clientUserNam
         for (int m = 0; m < 5; m++)
         {
             // freelancerLogin second column store the particular niche of that logged in freelancers
-            if (freelancerLogin[0][2] == clientNiche[i][m])
+            if (freelancerLogin[0][2] == clients[i].clientNiche[m])
             {
                 // if client job niches match with the freelancer Logged in niches then it show him the jobs, only the match niches
-                cout << setw(20) << a + 1 << setw(40) << clientUserName[i] << setw(50) << clientNiche[i][m] << setw(80) << clientJobDescription[i][m] << setw(50) << clientPayment[i][m] << endl;
+                cout << setw(20) << a + 1 << setw(40) << clients[i].clientUserName << setw(50) << clients[i].clientNiche[m] << setw(80) << clients[i].clientJobDescription[m] << setw(50) << clients[i].clientPayment[m] << endl;
                 a++;
             }
         }
@@ -1629,7 +1634,7 @@ void availableJob(int Cindex, string freelancerLogin[1][5], string clientUserNam
 }
 
 // allow freelancer to select the job from the available one's
-bool jobSelection(int Findex, int Cindex, string clientUserName[], string freelancerLogin[1][5], string clientJobDescription[1000][5], string clientNiche[1000][5], int clientPayment[1000][5], string freelancerJobSelected[1000][4], string freelancerUserName[])
+bool jobSelection(int Findex, int Cindex, client clients[], string freelancerLogin[1][5], freelancer freelancers[])
 {
     system("cls");
     int selectedNo = -1;
@@ -1637,7 +1642,7 @@ bool jobSelection(int Findex, int Cindex, string clientUserName[], string freela
     int clientIndex = -1;
 
     // freelancer select the job by selecting the user number displayed in the table
-    availableJob(Cindex, freelancerLogin, clientUserName, clientJobDescription, clientNiche, clientPayment);
+    availableJob(Cindex, freelancerLogin, clients);
     cout << "Select the Job Number of Client from the available ones to Apply on job or press 0 to go back: ";
     cin.clear();
     cin.ignore();
@@ -1682,7 +1687,7 @@ bool jobSelection(int Findex, int Cindex, string clientUserName[], string freela
         for (int j = 0; j < 5; j++)
         {
             // if niche match of freelancer and client
-            if (freelancerLogin[0][2] == clientNiche[i][j])
+            if (freelancerLogin[0][2] == clients[i].clientNiche[j])
             {
                 // count total jobs
                 totalJob++;
@@ -1713,7 +1718,7 @@ bool jobSelection(int Findex, int Cindex, string clientUserName[], string freela
     {
         for (int j = 0; j < 5; j++)
         {
-            if (freelancerLogin[0][2] == clientNiche[i][j])
+            if (freelancerLogin[0][2] == clients[i].clientNiche[j])
             {
                 // if job counter match with selected number then that job is selected
                 if (selectedNo == jobCounter)
@@ -1738,11 +1743,11 @@ bool jobSelection(int Findex, int Cindex, string clientUserName[], string freela
     }
     for (int i = 0; i < Findex; i++)
     {
-        if (freelancerLogin[0][0] == freelancerUserName[i])
+        if (freelancerLogin[0][0] == freelancers[i].freelancerUserName)
         {
             // only one job can be selected by the freelancer
             // first he has to submit the previous job and then he can apply on new one
-            if (freelancerJobSelected[i][0] != " ")
+            if (freelancers[i].freelancerJobSelected[0] != " ")
             {
                 setColor(3);
 
@@ -1753,10 +1758,10 @@ bool jobSelection(int Findex, int Cindex, string clientUserName[], string freela
             }
 
             // copy that job description in freelancer job selected array
-            freelancerJobSelected[i][0] = clientUserName[clientIndex];
-            freelancerJobSelected[i][1] = clientJobDescription[clientIndex][jobIndex];
-            freelancerJobSelected[i][2] = clientNiche[clientIndex][jobIndex];
-            freelancerJobSelected[i][3] = to_string(clientPayment[clientIndex][jobIndex]);
+            freelancers[i].freelancerJobSelected[0] = clients[clientIndex].clientUserName;
+            freelancers[i].freelancerJobSelected[1] = clients[clientIndex].clientJobDescription[jobIndex];
+            freelancers[i].freelancerJobSelected[2] = clients[clientIndex].clientNiche[jobIndex];
+            freelancers[i].freelancerJobSelected[3] = to_string(clients[clientIndex].clientPayment[jobIndex]);
 
             setColor(3);
             cout << "Job Accepted Successfully!" << endl;
@@ -1768,19 +1773,19 @@ bool jobSelection(int Findex, int Cindex, string clientUserName[], string freela
 }
 
 // freelaner customer support section
-void customerSupportfreelancer(int Findex, string freelancerLogin[1][5], string freelancerCustomerSupport[1000][2], string freelancerUserName[])
+void customerSupportfreelancer(int Findex, string freelancerLogin[1][5], freelancer freelancers[])
 {
     system("cls");
     for (int i = 0; i < Findex; i++)
     {
-        if (freelancerLogin[0][0] == freelancerUserName[i])
+        if (freelancerLogin[0][0] == freelancers[i].freelancerUserName)
         {
             // allow freelancer to give any suggestion or query to admin
-            freelancerCustomerSupport[i][0] = freelancerLogin[0][0];
+            freelancers[i].freelancerCustomerSupport[0] = freelancerLogin[0][0];
             cin.clear();
             cin.ignore();
             cout << "Enter Your Query/Suggestion: ";
-            getline(cin, freelancerCustomerSupport[i][1]);
+            getline(cin, freelancers[i].freelancerCustomerSupport[1]);
             setColor(3);
             cout << "Query/Suggestion has been successfully sent to Admin." << endl;
             setColor(15);
@@ -1790,7 +1795,7 @@ void customerSupportfreelancer(int Findex, string freelancerLogin[1][5], string 
 }
 
 // freelancer work submit
-void freelancerWorkSubmit(int Findex, int Cindex, string freelancerLogin[1][5], string freelancerUserName[], string freelancerJobSelected[1000][4], string clientUserName[], string clientJobDescription[1000][5], string clientNiche[1000][5], int clientPayment[1000][5], int freelancerEarning[], int ratingCounter[1000][5], string rating[1000][5][1])
+void freelancerWorkSubmit(int Findex, int Cindex, string freelancerLogin[1][5], freelancer freelancers[], client clients[])
 {
     system("cls");
     // ANSI escape code for bold text
@@ -1811,21 +1816,21 @@ void freelancerWorkSubmit(int Findex, int Cindex, string freelancerLogin[1][5], 
     for (int i = 0; i < Findex; i++)
     {
         // search the name with the logged in freelancer account name
-        if (freelancerLogin[0][0] == freelancerUserName[i])
+        if (freelancerLogin[0][0] == freelancers[i].freelancerUserName)
         {
             cout << left;
 
             // if job selected display all the job data to submit
-            if (freelancerJobSelected[i][0] != " ")
+            if (freelancers[i].freelancerJobSelected[0] != " ")
             {
                 cout << endl;
-                cout << setw(30) << "Client Name: " << freelancerJobSelected[i][0] << endl
+                cout << setw(30) << "Client Name: " << freelancers[i].freelancerJobSelected[0] << endl
                      << endl;
-                cout << setw(30) << "Job Description: " << freelancerJobSelected[i][1] << endl
+                cout << setw(30) << "Job Description: " << freelancers[i].freelancerJobSelected[1] << endl
                      << endl;
-                cout << setw(30) << "Job Niche: " << freelancerJobSelected[i][2] << endl
+                cout << setw(30) << "Job Niche: " << freelancers[i].freelancerJobSelected[2] << endl
                      << endl;
-                cout << setw(30) << "Job Price: " << freelancerJobSelected[i][3] << endl
+                cout << setw(30) << "Job Price: " << freelancers[i].freelancerJobSelected[3] << endl
                      << endl
                      << endl;
                 cout << "Do you want to submit/(mark completed) this job(Yes/No): ";
@@ -1875,33 +1880,32 @@ void freelancerWorkSubmit(int Findex, int Cindex, string freelancerLogin[1][5], 
                         for (int k = 0; k < Cindex; k++)
                         {
                             // search that name of client who posted this job
-                            if (freelancerJobSelected[i][0] == clientUserName[k])
+                            if (freelancers[i].freelancerJobSelected[0] == clients[k].clientUserName)
                             {
                                 for (int l = 0; l < 5; l++)
                                 {
                                     // search that job niche
-                                    if (freelancerJobSelected[i][2] == clientNiche[k][l])
+                                    if (freelancers[i].freelancerJobSelected[2] == clients[k].clientNiche[l])
                                     {
                                         // add earning to freelancer account
-                                        // freelancerEarning[i] += clientPayment[k][l];
 
-                                        if (freelancerJobSelected[i][1] == clientJobDescription[k][l])
+                                        if (freelancers[i].freelancerJobSelected[1] == clients[k].clientJobDescription[l])
                                         {
                                             // rating counter of client job increases
-                                            ratingCounter[k][l]++;
-                                            rating[k][l][0] = freelancerUserName[i];
+                                            clients[k].ratingCounter[l]++;
+                                            clients[k].rating[l][0] = freelancers[i].freelancerUserName;
 
                                             int amount = 0;
-                                            for (int s = 0; s < freelancerJobSelected[i][3].length(); s++)
+                                            for (int s = 0; s < freelancers[i].freelancerJobSelected[3].length(); s++)
                                             {
-                                                char ch = freelancerJobSelected[i][3][s];
+                                                char ch = freelancers[i].freelancerJobSelected[3][s];
                                                 if (ch >= '0' && ch <= '9')
                                                 {
                                                     amount = amount * 10 + (ch - '0');
                                                 }
                                             }
 
-                                            freelancerEarning[i] += amount;
+                                            freelancers[i].freelancerEarning += amount;
                                         }
                                     }
                                 }
@@ -1909,7 +1913,7 @@ void freelancerWorkSubmit(int Findex, int Cindex, string freelancerLogin[1][5], 
                         }
                         for (int p = 0; p < 4; p++)
                         {
-                            freelancerJobSelected[i][p] = " ";
+                            freelancers[i].freelancerJobSelected[p] = " ";
                         }
                         break;
                     }
@@ -1925,14 +1929,14 @@ void freelancerWorkSubmit(int Findex, int Cindex, string freelancerLogin[1][5], 
 }
 
 // allow freelancer to widthdraw their money
-char widthdrawMoney(int Findex, string freelancerLogin[1][5], string freelancerUserName[], int freelancerEarning[])
+char widthdrawMoney(int Findex, string freelancerLogin[1][5], freelancer freelancers[])
 {
     char option = 'c';
     for (int i = 0; i < Findex; i++)
     {
-        if (freelancerLogin[0][0] == freelancerUserName[i])
+        if (freelancerLogin[0][0] == freelancers[i].freelancerUserName)
         {
-            if (freelancerEarning[i] > 0)
+            if (freelancers[i].freelancerEarning > 0)
             {
                 cout << "Do you want to widthdraw this money(Y/N) ?";
                 cin >> option;
@@ -1960,26 +1964,26 @@ char widthdrawMoney(int Findex, string freelancerLogin[1][5], string freelancerU
 }
 
 // display the freelancer his total earning
-void freelancerEarnings(int Findex, string freelancerLogin[1][5], string freelancerUserName[], int freelancerEarning[], string freelancerRating[])
+void freelancerEarnings(int Findex, string freelancerLogin[1][5], freelancer freelancers[])
 {
     system("cls");
     char answer;
     for (int i = 0; i < Findex; i++)
     {
-        if (freelancerLogin[0][0] == freelancerUserName[i])
+        if (freelancerLogin[0][0] == freelancers[i].freelancerUserName)
         {
             cout << endl;
 
-            cout << "Rating : " << freelancerRating[i] << endl
+            cout << "Rating : " << freelancers[i].freelancerRating << endl
                  << endl;
 
             cout << "Total Earnings up till now:";
             setColor(3);
             cout << " $";
-            cout << freelancerEarning[i] << endl
+            cout << freelancers[i].freelancerEarning << endl
                  << endl;
             setColor(15);
-            answer = widthdrawMoney(Findex, freelancerLogin, freelancerUserName, freelancerEarning);
+            answer = widthdrawMoney(Findex, freelancerLogin, freelancers);
             if (answer == 'y' || answer == 'Y')
             {
                 setColor(3);
@@ -2004,7 +2008,7 @@ void freelancerEarnings(int Findex, string freelancerLogin[1][5], string freelan
 /////////////////////////////////CLIENT FUNCTION //////////////////////////////
 
 // allow clients to post their jobs
-bool postJob(int Cindex, string niches[], string clientLogin[1][3], string clientUserName[], string clientPassword[], string clientNiche[1000][5], string clientJobDescription[1000][5], int clientPayment[1000][5], int clientSpend[], int ratingCounter[1000][5])
+bool postJob(int Cindex, string niches[], string clientLogin[1][3], client clients[])
 {
     system("cls");
     bool flag = false;
@@ -2047,32 +2051,32 @@ bool postJob(int Cindex, string niches[], string clientLogin[1][3], string clien
     {
 
         // if clientLogin name and clientUserName match
-        if ((clientLogin[0][0] == clientUserName[i]) && (clientLogin[0][1] == clientPassword[i]))
+        if ((clientLogin[0][0] == clients[i].clientUserName) && (clientLogin[0][1] == clients[i].clientPassword))
         {
             for (int k = 0; k < 5; k++)
             {
                 // check for free niche space available of that clientUserName
-                if (clientNiche[i][k] == "empty")
+                if (clients[i].clientNiche[k] == "empty")
                 {
                     // if available then store niche name in that particular client niche slot
-                    clientNiche[i][k] = clientLogin[0][2];
+                    clients[i].clientNiche[k] = clientLogin[0][2];
 
                     // store the job description in particular niche data
                     cout << "Enter Job Description: ";
-                    getline(cin, clientJobDescription[i][k]);
+                    getline(cin, clients[i].clientJobDescription[k]);
 
-                    while (clientJobDescription[i][k].length() < 1)
+                    while (clients[i].clientJobDescription[k].length() < 1)
                     {
                         setColor(3);
                         cout << "Please Enter a valid Job Description." << endl;
                         setColor(15);
                         cout << "Enter Job Description: ";
-                        getline(cin, clientJobDescription[i][k]);
+                        getline(cin, clients[i].clientJobDescription[k]);
                     }
 
                     // store payment in particular niche data
                     cout << "Enter Payment: $";
-                    cin >> clientPayment[i][k];
+                    cin >> clients[i].clientPayment[k];
                     while (!cin)
                     {
                         cin.clear();
@@ -2084,10 +2088,10 @@ bool postJob(int Cindex, string niches[], string clientLogin[1][3], string clien
 
                         // store payment in particular niche data
                         cout << "Enter Payment: $";
-                        cin >> clientPayment[i][k];
+                        cin >> clients[i].clientPayment[k];
                     }
-                    clientSpend[i] += clientPayment[i][k];
-                    ratingCounter[i][k]++;
+                    clients[i].clientSpend += clients[i].clientPayment[k];
+                    clients[i].ratingCounter[k]++;
                     breaker = true;
                     break;
                 }
@@ -2110,18 +2114,18 @@ bool postJob(int Cindex, string niches[], string clientLogin[1][3], string clien
 }
 
 // freelaner customer support section
-void customerSupportClient(int Cindex, string clientCustomerSupport[1000][2], string clientUserName[])
+void customerSupportClient(int Cindex, string clientLogin[][3], client clients[])
 {
     system("cls");
     for (int i = 0; i < Cindex; i++)
     {
-        if (clientLogin[0][0] == clientUserName[i])
+        if (clientLogin[0][0] == clients[i].clientUserName)
         {
-            clientCustomerSupport[i][0] = clientLogin[0][0];
+            clients[i].clientCustomerSupport[0] = clientLogin[0][0];
             cin.clear();
             cin.ignore();
             cout << "Enter Your Query/Suggestion: ";
-            getline(cin, clientCustomerSupport[i][1]);
+            getline(cin, clients[i].clientCustomerSupport[1]);
             setColor(3);
             cout << "Query/Suggestion has been successfully sent to Admin." << endl;
             setColor(15);
@@ -2130,7 +2134,7 @@ void customerSupportClient(int Cindex, string clientCustomerSupport[1000][2], st
     }
 }
 
-void pendingRating(int Findex, int Cindex, string clientLogin[1][3], string clientUserName[], string freelancerUserName[], string freelancerRating[], int ratingCounter[1000][5], string rating[1000][5][1], string clientJobDescription[1000][5], int clientPayment[1000][5], string clientNiche[1000][5], float ratingSum[], int ratingCount[])
+void pendingRating(int Findex, int Cindex, string clientLogin[1][3], freelancer freelancers[], client clients[])
 {
     system("cls");
     // ANSI escape code for bold text
@@ -2148,21 +2152,21 @@ void pendingRating(int Findex, int Cindex, string clientLogin[1][3], string clie
 
     {
         // search for client name from main array
-        if (clientLogin[0][0] == clientUserName[i])
+        if (clientLogin[0][0] == clients[i].clientUserName)
         {
             for (int m = 0; m < 5; m++)
             {
 
                 // if rating counter reaches the limit then display the job details which is available for rating
-                if (ratingCounter[i][m] == 2)
+                if (clients[i].ratingCounter[m] == 2)
                 {
-                    cout << "Freelancer Name that Completed this Job: " << rating[i][m][0] << endl
+                    cout << "Freelancer Name that Completed this Job: " << clients[i].rating[m][0] << endl
                          << endl;
-                    cout << "Job Niche : " << clientNiche[i][m] << endl
+                    cout << "Job Niche : " << clients[i].clientNiche[m] << endl
                          << endl;
-                    cout << "Job Description : " << clientJobDescription[i][m] << endl
+                    cout << "Job Description : " << clients[i].clientJobDescription[m] << endl
                          << endl;
-                    cout << "Job Price : " << clientPayment[i][m] << endl
+                    cout << "Job Price : " << clients[i].clientPayment[m] << endl
                          << endl
                          << endl;
                     cout << "Enter Rating (0-5) : ";
@@ -2180,22 +2184,22 @@ void pendingRating(int Findex, int Cindex, string clientLogin[1][3], string clie
                     for (int p = 0; p < Findex; p++)
                     {
                         // display that name who has completed this job
-                        if (rating[i][m][0] == freelancerUserName[p])
+                        if (clients[i].rating[m][0] == freelancers[p].freelancerUserName)
                         {
                             // add the average of rating value to that client account
-                            ratingSum[p] += (ratingValue);
-                            ratingCount[p]++;
-                            freelancerRating[p] = to_string(ratingSum[p] / ratingCount[p]);
+                            freelancers[p].ratingSum += (ratingValue);
+                            freelancers[p].ratingCount++;
+                            freelancers[p].freelancerRating = to_string(freelancers[p].ratingSum / freelancers[p].ratingCount);
                             setColor(3);
-                            cout << "Rating: " << fixed << setprecision(1) << ratingValue << " has been given to freelancer " << rating[i][m][0] << endl;
+                            cout << "Rating: " << fixed << setprecision(1) << ratingValue << " has been given to freelancer " << clients[i].rating[m][0] << endl;
                             setColor(15);
 
                             // once the rating has been given delete this job data
-                            clientJobDescription[i][m] = "empty";
-                            clientPayment[i][m] = 0;
-                            clientNiche[i][m] = "empty";
-                            rating[i][m][0] = "empty";
-                            ratingCounter[i][m] = 0;
+                            clients[i].clientJobDescription[m] = "empty";
+                            clients[i].clientPayment[m] = 0;
+                            clients[i].clientNiche[m] = "empty";
+                            clients[i].rating[m][0] = "empty";
+                            clients[i].ratingCounter[m] = 0;
                             flag = true;
                             break;
                         }
@@ -2219,7 +2223,7 @@ void pendingRating(int Findex, int Cindex, string clientLogin[1][3], string clie
 /////////////////////////////////CLIENT FUNCTION END //////////////////////////////
 
 // load all the data from files
-void loadData(string freelancerUserName[], string freelancerPassword[], string freelancerRating[], string freelancerNiche[], int freelancerEarning[], float ratingSum[], int ratingCount[], string freelancerCustomerSupport[][2], int &Findex, string clientUserName[], string clientPassword[], int clientSpend[], string clientJobDescription[][5], string clientNiche[][5], int clientPayment[][5], string clientCustomerSupport[][2], int ratingCounter[][5], string rating[][5][1], int &Cindex, string niches[], string headingCustomerPolicy[], string dataCustomerPolicy[])
+void loadData(freelancer freelancers[], int &Findex, client clients[], int &Cindex, string niches[], string headingCustomerPolicy[], string dataCustomerPolicy[])
 {
     ifstream fin;
 
@@ -2250,28 +2254,28 @@ void loadData(string freelancerUserName[], string freelancerPassword[], string f
         Findex = 0;
         while (fin.peek() != EOF)
         {
-            getline(fin, freelancerUserName[Findex], ',');
-            getline(fin, freelancerPassword[Findex], ',');
-            getline(fin, freelancerRating[Findex], ',');
-            getline(fin, freelancerNiche[Findex], ',');
+            getline(fin, freelancers[Findex].freelancerUserName, ',');
+            getline(fin, freelancers[Findex].freelancerPassword, ',');
+            getline(fin, freelancers[Findex].freelancerRating, ',');
+            getline(fin, freelancers[Findex].freelancerNiche, ',');
 
-            fin >> freelancerEarning[Findex];
-
-            // consume delimiter
-            fin.get();
-
-            fin >> ratingSum[Findex];
+            fin >> freelancers[Findex].freelancerEarning;
 
             // consume delimiter
             fin.get();
 
-            fin >> ratingCount[Findex];
+            fin >> freelancers[Findex].ratingSum;
 
             // consume delimiter
             fin.get();
 
-            getline(fin, freelancerCustomerSupport[Findex][0], ';');
-            getline(fin, freelancerCustomerSupport[Findex][1], '\n');
+            fin >> freelancers[Findex].ratingCount;
+
+            // consume delimiter
+            fin.get();
+
+            getline(fin, freelancers[Findex].freelancerCustomerSupport[0], ';');
+            getline(fin, freelancers[Findex].freelancerCustomerSupport[1], '\n');
 
             ++Findex;
         }
@@ -2303,7 +2307,7 @@ void loadData(string freelancerUserName[], string freelancerPassword[], string f
             temp += line[pos];
             pos++;
         }
-        clientUserName[Cindex] = temp;
+        clients[Cindex].clientUserName = temp;
 
         // skip the comma
         pos++;
@@ -2315,7 +2319,7 @@ void loadData(string freelancerUserName[], string freelancerPassword[], string f
             temp += line[pos];
             pos++;
         }
-        clientPassword[Cindex] = temp;
+        clients[Cindex].clientPassword = temp;
 
         // skip the comma
         pos++;
@@ -2333,7 +2337,7 @@ void loadData(string freelancerUserName[], string freelancerPassword[], string f
             }
             pos++;
         }
-        clientSpend[Cindex] = spend;
+        clients[Cindex].clientSpend = spend;
 
         // skip the comma
         pos++;
@@ -2348,7 +2352,7 @@ void loadData(string freelancerUserName[], string freelancerPassword[], string f
                 temp += line[pos];
                 pos++;
             }
-            clientJobDescription[Cindex][j] = temp;
+            clients[Cindex].clientJobDescription[j] = temp;
 
             // skip the semicolon
             pos++;
@@ -2360,7 +2364,7 @@ void loadData(string freelancerUserName[], string freelancerPassword[], string f
                 temp += line[pos];
                 pos++;
             }
-            clientNiche[Cindex][j] = temp;
+            clients[Cindex].clientNiche[j] = temp;
 
             // skip the semicolon
             pos++;
@@ -2377,7 +2381,7 @@ void loadData(string freelancerUserName[], string freelancerPassword[], string f
                 }
                 pos++;
             }
-            clientPayment[Cindex][j] = payment;
+            clients[Cindex].clientPayment[j] = payment;
             if (line[pos] == '|')
                 // skip the pipe delimiter
                 pos++;
@@ -2398,7 +2402,7 @@ void loadData(string freelancerUserName[], string freelancerPassword[], string f
                 }
                 pos++;
             }
-            ratingCounter[Cindex][j] = counter;
+            clients[Cindex].ratingCounter[j] = counter;
 
             // skip the semicolon
             pos++;
@@ -2410,7 +2414,7 @@ void loadData(string freelancerUserName[], string freelancerPassword[], string f
                 temp += line[pos];
                 pos++;
             }
-            rating[Cindex][j][0] = temp;
+            clients[Cindex].rating[j][0] = temp;
             if (line[pos] == '|')
 
                 // skip the pipe delimiter
@@ -2428,7 +2432,7 @@ void loadData(string freelancerUserName[], string freelancerPassword[], string f
             temp += line[pos];
             pos++;
         }
-        clientCustomerSupport[Cindex][0] = temp;
+        clients[Cindex].clientCustomerSupport[0] = temp;
 
         // skip the semicolon
         pos++;
@@ -2439,7 +2443,7 @@ void loadData(string freelancerUserName[], string freelancerPassword[], string f
             temp += line[pos];
             pos++;
         }
-        clientCustomerSupport[Cindex][1] = temp;
+        clients[Cindex].clientCustomerSupport[1] = temp;
 
         // increment Cindex for next client
         Cindex++;
@@ -2491,7 +2495,7 @@ void loadData(string freelancerUserName[], string freelancerPassword[], string f
 }
 
 // store all the data to files
-void storeData(string freelancerUserName[], string freelancerPassword[], string freelancerRating[], string freelancerNiche[], int freelancerEarning[], float ratingSum[], int ratingCount[], string freelancerCustomerSupport[][2], int Findex, string clientUserName[], string clientPassword[], int clientSpend[], string clientJobDescription[][5], string clientNiche[][5], int clientPayment[][5], string clientCustomerSupport[][2], int ratingCounter[][5], string rating[][5][1], int Cindex, string niches[], string headingCustomerPolicy[], string dataCustomerPolicy[])
+void storeData(freelancer freelancers[], int Findex, client clients[], int Cindex, string niches[], string headingCustomerPolicy[], string dataCustomerPolicy[])
 {
     ofstream fout;
 
@@ -2500,15 +2504,15 @@ void storeData(string freelancerUserName[], string freelancerPassword[], string 
 
     for (int i = 0; i < Findex; ++i)
     {
-        fout << freelancerUserName[i] << ","
-             << freelancerPassword[i] << ","
-             << freelancerRating[i] << ","
-             << freelancerNiche[i] << ","
-             << freelancerEarning[i] << ","
-             << ratingSum[i] << ","
-             << ratingCount[i] << ","
-             << freelancerCustomerSupport[i][0] << ";"
-             << freelancerCustomerSupport[i][1] << "\n";
+        fout << freelancers[i].freelancerUserName << ","
+             << freelancers[i].freelancerPassword << ","
+             << freelancers[i].freelancerRating << ","
+             << freelancers[i].freelancerNiche << ","
+             << freelancers[i].freelancerEarning << ","
+             << freelancers[i].ratingSum << ","
+             << freelancers[i].ratingCount << ","
+             << freelancers[i].freelancerCustomerSupport[0] << ";"
+             << freelancers[i].freelancerCustomerSupport[1] << "\n";
     }
     fout.close();
 
@@ -2519,14 +2523,14 @@ void storeData(string freelancerUserName[], string freelancerPassword[], string 
     for (int i = 0; i < Cindex; ++i)
     {
         // write basic client data
-        fout << clientUserName[i] << "," << clientPassword[i] << "," << clientSpend[i] << ",";
+        fout << clients[i].clientUserName << "," << clients[i].clientPassword << "," << clients[i].clientSpend << ",";
 
         // write job descriptions, niches, and payments
         for (int j = 0; j < 5; ++j)
         {
-            fout << clientJobDescription[i][j] << ";";
-            fout << clientNiche[i][j] << ";";
-            fout << clientPayment[i][j];
+            fout << clients[i].clientJobDescription[j] << ";";
+            fout << clients[i].clientNiche[j] << ";";
+            fout << clients[i].clientPayment[j];
             if (j < 4)
 
                 // Separate with "|"
@@ -2538,8 +2542,8 @@ void storeData(string freelancerUserName[], string freelancerPassword[], string 
         // write rating counter and ratings
         for (int j = 0; j < 5; ++j)
         {
-            fout << ratingCounter[i][j] << ";";
-            fout << rating[i][j][0];
+            fout << clients[i].ratingCounter[j] << ";";
+            fout << clients[i].rating[j][0];
             if (j < 4)
 
                 // Separate ratings with "|"
@@ -2549,7 +2553,7 @@ void storeData(string freelancerUserName[], string freelancerPassword[], string 
         fout << ",";
 
         // write customer support
-        fout << clientCustomerSupport[i][0] << ";" << clientCustomerSupport[i][1] << "\n";
+        fout << clients[i].clientCustomerSupport[0] << ";" << clients[i].clientCustomerSupport[1] << "\n";
     }
 
     fout.close();
@@ -2585,41 +2589,41 @@ void storeData(string freelancerUserName[], string freelancerPassword[], string 
     cout << "Data stored s/uccessfully.\n";
 }
 
-void initilizeData(string freelancerUserName[], string freelancerPassword[], string freelancerRating[], string freelancerNiche[], string clientUserName[], string clientPassword[], string freelancerCustomerSupport[1000][2], string clientCustomerSupport[1000][2], int freelancerEarning[1000], int clientSpend[1000], string headingCustomerPolicy[1000], string dataCustomerPolicy[1000], string niches[100], string clientJobDescription[1000][5], string clientNiche[1000][5], int clientPayment[1000][5], int ratingCounter[1000][5], string freelancerJobSelected[1000][4], float ratingSum[1000], int ratingCount[1000], string rating[1000][5][1])
+void initilizeData(freelancer freelancers[], client clients[], string headingCustomerPolicy[1000], string dataCustomerPolicy[1000], string niches[100], string freelancerLogin[][5],string clientLogin[][3])
 {
     for (int i = 0; i < 1000; i++)
     {
-        freelancerUserName[i] = " ";
-        freelancerPassword[i] = " ";
-        clientUserName[i] = "empty";
-        clientPassword[i] = "empty";
-        freelancerRating[i] = "N/A";
-        freelancerEarning[i] = 0;
-        clientSpend[i] = 0;
-        ratingSum[i] = 0.0;
-        ratingCount[i] = 0;
+        freelancers[i].freelancerUserName = " ";
+        freelancers[i].freelancerPassword = " ";
+        clients[i].clientUserName = "empty";
+        clients[i].clientPassword = "empty";
+        freelancers[i].freelancerRating = "N/A";
+        freelancers[i].freelancerEarning = 0;
+        clients[i].clientSpend = 0;
+        freelancers[i].ratingSum = 0.0;
+        freelancers[i].ratingCount = 0;
         headingCustomerPolicy[i] = " ";
         dataCustomerPolicy[i] = " ";
-        freelancerNiche[i] = " ";
+        freelancers[i].freelancerNiche = " ";
         for (int j = 0; j < 2; j++)
         {
-            freelancerCustomerSupport[i][j] = " ";
-            clientCustomerSupport[i][j] = "empty";
+            freelancers[i].freelancerCustomerSupport[j] = " ";
+            clients[i].clientCustomerSupport[j] = "empty";
         }
         for (int j = 0; j < 5; j++)
         {
-            clientNiche[i][j] = "empty";
-            clientJobDescription[i][j] = "empty";
-            clientPayment[i][j] = 0;
-            ratingCounter[i][i] = 0;
+            clients[i].clientNiche[j] = "empty";
+            clients[i].clientJobDescription[j] = "empty";
+            clients[i].clientPayment[j] = 0;
+            clients[i].ratingCounter[j] = 0;
             for (int m = 0; m < 1; m++)
             {
-                rating[i][j][m] = "empty";
+                clients[i].rating[j][m] = "empty";
             }
         }
         for (int j = 0; j < 4; j++)
         {
-            freelancerJobSelected[i][j] = " ";
+            freelancers[i].freelancerJobSelected[j] = " ";
         }
     }
 

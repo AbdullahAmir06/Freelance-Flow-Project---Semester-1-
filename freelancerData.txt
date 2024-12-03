@@ -7,4 +7,5 @@ SarahWilliams,Sarah@303,N/A,Game Development,0,0,0, ;
 RobertLee,Robert@404,N/A,SEO Optimization,0,0,0, ; 
 OliviaMartinez,Olivia@505,N/A,CyberSecurity,0,0,0, ; 
 DanielClark,Daniel@606,4.300000,AI Learning,798,4.3,1, ; 
-SophiaWalker,Sophia@707,N/A,AI Learning,15,0,0, ; 
+SophiaWalker,Sophia@707,N/A,AI Learning,15,0,0, ;
+John123,john@808,N/A,Wordpress,0,0,0, ; 

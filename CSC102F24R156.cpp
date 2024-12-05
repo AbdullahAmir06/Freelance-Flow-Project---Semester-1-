@@ -30,7 +30,7 @@ struct client
     string clientNiche[5];
     int clientPayment[5];
     int ratingCounter[5];
-    string rating[5][1];        // 1000 is client ,5 is niche and 1 is freelancer name
+    string rating[5][1]; // 1000 is client ,5 is niche and 1 is freelancer name
 };
 
 // Set console code page to UTF-8
@@ -103,7 +103,7 @@ void freelancerEarnings(int Findex, string freelancerLogin[1][5], freelancer fre
 bool postJob(int Cindex, string niches[], string clientLogin[][3], client clients[]);
 
 // freelaner customer support section
-void customerSupportClient(int Cindex,string clientLogin[][3], client clients[]);
+void customerSupportClient(int Cindex, string clientLogin[][3], client clients[]);
 
 // Pending rating of freelancers
 void pendingRating(int Findex, int Cindex, string clientLogin[][3], freelancer freelancers[], client clients[]);
@@ -116,7 +116,7 @@ void loadData(freelancer freelancers[], int &Findex, client clients[], int &Cind
 // store all the data to files
 void storeData(freelancer freelancers[], int Findex, client clients[], int Cindex, string niches[], string headingCustomerPolicy[], string dataCustomerPolicy[]);
 
-void initilizeData(freelancer freelancers[], client clients[], string headingCustomerPolicy[1000], string dataCustomerPolicy[1000], string niches[100],  string freelancerLogin[][5],string clientLogin[][3]);
+void initilizeData(freelancer freelancers[], client clients[], string headingCustomerPolicy[1000], string dataCustomerPolicy[1000], string niches[100], string freelancerLogin[][5], string clientLogin[][3]);
 
 // temporary 2d array to store data
 
@@ -145,7 +145,7 @@ int main()
     niches[8] = "Machine Learning";
     niches[9] = "AI Learning";
 
-    initilizeData(freelancers, clients, headingCustomerPolicy, dataCustomerPolicy, niches, freelancerLogin,clientLogin);
+    initilizeData(freelancers, clients, headingCustomerPolicy, dataCustomerPolicy, niches, freelancerLogin, clientLogin);
 
     loadData(freelancers, Findex, clients, Cindex, niches, headingCustomerPolicy, dataCustomerPolicy);
 
@@ -620,7 +620,6 @@ int main()
 
                             cout << setw(121) << "Enter Password: ";
                             cin >> clients[i].clientPassword;
-
                         }
 
                         Cindex++;
@@ -938,7 +937,7 @@ int main()
                 }
                 else if (input == 4)
                 {
-                    customerSupportClient(Cindex,clientLogin ,clients);
+                    customerSupportClient(Cindex, clientLogin, clients);
                     /*customer support client function call code*/
                 }
 
@@ -1321,13 +1320,17 @@ int removeFreelancerAcc(int &Findex, string user, freelancer freelancers[])
             freelancers[i].freelancerRating = "N/A";
             freelancers[i].freelancerEarning = 0;
             freelancers[i].freelancerNiche = " ";
+            freelancers[i].ratingCount = 0;
+            freelancers[i].ratingSum = 0.0;
+            for (int t = 0; t < 4; t++)
+            {
+                freelancers[i].freelancerJobSelected[t] = " ";
+            }
 
             for (int n = 0; n < 2; n++)
             {
                 freelancers[i].freelancerCustomerSupport[n] = " ";
             }
-
-            result = 1;
 
             // move all the data of freelancer next to the user removed one space back to maintain in consistent order
             for (int j = i; j < Findex - 1; j++)
@@ -1337,32 +1340,44 @@ int removeFreelancerAcc(int &Findex, string user, freelancer freelancers[])
                 freelancers[j].freelancerRating = freelancers[j + 1].freelancerRating;
                 freelancers[j].freelancerEarning = freelancers[j + 1].freelancerEarning;
                 freelancers[j].freelancerNiche = freelancers[j + 1].freelancerNiche;
+                freelancers[i].ratingCount = freelancers[j + 1].ratingCount;
+                freelancers[i].ratingSum = freelancers[j + 1].ratingSum;
+
+                for (int t = 0; t < 4; t++)
+                {
+                    freelancers[i].freelancerJobSelected[t] = freelancers[j + 1].freelancerJobSelected[t];
+                }
 
                 for (int n = 0; n < 2; n++)
                 {
                     freelancers[j].freelancerCustomerSupport[n] = freelancers[j + 1].freelancerCustomerSupport[n];
                 }
             }
+            // initialize the last freelancer properly to avoid any unexcepted data
+            freelancers[Findex - 1].freelancerUserName = " ";
+            freelancers[Findex - 1].freelancerPassword = " ";
+            freelancers[Findex - 1].freelancerRating = "N/A";
+            freelancers[Findex - 1].freelancerEarning = 0;
+            freelancers[Findex - 1].freelancerNiche = " ";
+            freelancers[Findex - 1].ratingCount = 0;
+            freelancers[Findex - 1].ratingSum = 0.0;
 
+            for (int n = 0; n < 4; n++)
+            {
+                freelancers[i].freelancerJobSelected[n] = " ";
+            }
+
+            for (int n = 0; n < 2; n++)
+            {
+                freelancers[Findex - 1].freelancerCustomerSupport[n] = " ";
+            }
+
+            // Findex decreases
+            Findex--;
+            result = 1;
             break;
         }
     }
-
-    // initialize the last freelancer properly to avoid any unexcepted data
-    freelancers[Findex - 1].freelancerUserName = " ";
-    freelancers[Findex - 1].freelancerPassword = " ";
-    freelancers[Findex - 1].freelancerRating = "N/A";
-    freelancers[Findex - 1].freelancerEarning = 0;
-    freelancers[Findex - 1].freelancerNiche = " ";
-
-    for (int n = 0; n < 2; n++)
-    {
-        freelancers[Findex - 1].freelancerCustomerSupport[n] = " ";
-    }
-
-    // Findex decreases
-    Findex--;
-
     return result;
 }
 
@@ -2589,7 +2604,7 @@ void storeData(freelancer freelancers[], int Findex, client clients[], int Cinde
     cout << "Data stored s/uccessfully.\n";
 }
 
-void initilizeData(freelancer freelancers[], client clients[], string headingCustomerPolicy[1000], string dataCustomerPolicy[1000], string niches[100], string freelancerLogin[][5],string clientLogin[][3])
+void initilizeData(freelancer freelancers[], client clients[], string headingCustomerPolicy[1000], string dataCustomerPolicy[1000], string niches[100], string freelancerLogin[][5], string clientLogin[][3])
 {
     for (int i = 0; i < 1000; i++)
     {

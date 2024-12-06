@@ -2,6 +2,7 @@
 #include <string>
 #include <iomanip>
 #include <windows.h>
+#include <cstring>
 #include <conio.h>
 #include <fstream>
 
@@ -57,10 +58,10 @@ void freelancerStatistic(int Findex, freelancer freelancers[]);
 void clientStatistic(int Cindex, client clients[]);
 
 // show all the detail of customer policy
-void customerPolicy(string headingCustomerPolicy[], string dataCustomerPolicy[]);
+void customerPolicy(string headingCustomerPolicy[], string dataCustomerPolicy[], int sizeOfArrays);
 
 // allow admin to add more policy
-int customerAddPolicy(string headingCustomerPolicy[], string dataCustomerPolicy[]);
+int customerAddPolicy(string headingCustomerPolicy[], string dataCustomerPolicy[], int sizeOfArrays);
 
 // allow admin to delete freelancer account
 int removeFreelancerAcc(int &Findex, string user, freelancer freelancers[]);
@@ -69,7 +70,7 @@ int removeFreelancerAcc(int &Findex, string user, freelancer freelancers[]);
 int removeClientAcc(int &Cindex, string user, client clients[]);
 
 // show admin all the queries/suggesstion of freelancers and clients
-void customerSupport(freelancer freelancers[], client clients[]);
+void customerSupport(freelancer freelancers[], client clients[], int sizeOfArrays);
 
 // display all the niches which admin has allowed in the app
 void nichesShow(string niches[]);
@@ -114,9 +115,17 @@ void pendingRating(int Findex, int Cindex, string clientLogin[][3], freelancer f
 void loadData(freelancer freelancers[], int &Findex, client clients[], int &Cindex, string niches[], string headingCustomerPolicy[], string dataCustomerPolicy[]);
 
 // store all the data to files
-void storeData(freelancer freelancers[], int Findex, client clients[], int Cindex, string niches[], string headingCustomerPolicy[], string dataCustomerPolicy[]);
+void storeData(freelancer freelancers[], int Findex, client clients[], int Cindex, string niches[], string headingCustomerPolicy[], string dataCustomerPolicy[], int sizeOfArrays);
 
-void initilizeData(freelancer freelancers[], client clients[], string headingCustomerPolicy[1000], string dataCustomerPolicy[1000], string niches[100], string freelancerLogin[][5], string clientLogin[][3]);
+void initilizeData(freelancer freelancers[], client clients[], string headingCustomerPolicy[], string dataCustomerPolicy[], string niches[100], string freelancerLogin[][5], string clientLogin[][3], int sizeOfArrays);
+
+bool isValidUserName(freelancer freelancers[], int p);
+
+bool isValidPassword(freelancer freelancers[], int p);
+
+bool isValidClientUserName(client clients[], int p);
+
+bool isValidClientPassword(client clients[], int p);
 
 // temporary 2d array to store data
 
@@ -127,11 +136,11 @@ int main()
     string freelancerLogin[1][5];
 
     int Findex = 0, Cindex = 0;
+    const int sizeOfArrays = 1000;
+    freelancer freelancers[sizeOfArrays];
+    client clients[sizeOfArrays];
 
-    freelancer freelancers[1000];
-    client clients[1000];
-
-    string headingCustomerPolicy[1000], dataCustomerPolicy[1000];
+    string headingCustomerPolicy[sizeOfArrays], dataCustomerPolicy[sizeOfArrays];
     string niches[100]; // contain all allowed niches
 
     niches[0] = "Graphic Designing";
@@ -145,7 +154,7 @@ int main()
     niches[8] = "Machine Learning";
     niches[9] = "AI Learning";
 
-    initilizeData(freelancers, clients, headingCustomerPolicy, dataCustomerPolicy, niches, freelancerLogin, clientLogin);
+    initilizeData(freelancers, clients, headingCustomerPolicy, dataCustomerPolicy, niches, freelancerLogin, clientLogin, sizeOfArrays);
 
     loadData(freelancers, Findex, clients, Cindex, niches, headingCustomerPolicy, dataCustomerPolicy);
 
@@ -387,7 +396,7 @@ int main()
             if (input == 1)
             {
                 usertype = 0; // random initialize
-                for (int i = 0; i < 1000; i++)
+                for (int i = 0; i < sizeOfArrays; i++)
                 {
                     if (freelancers[i].freelancerUserName == " ")
                     {
@@ -397,31 +406,15 @@ int main()
                         cout << setw(121) << "Enter Username: ";
 
                         cin >> freelancers[i].freelancerUserName;
-                        while (freelancers[i].freelancerUserName.length() < 3)
-                        {
 
-                            cin.ignore();
-                            setColor(3);
-                            cout << "UserName should contain atleast 3 character's." << endl;
-                            setColor(15);
-                            cout << setw(121) << "Enter Username: ";
-                            cin >> freelancers[i].freelancerUserName;
-                        }
-                        cin.ignore();
+                        int p = i;
+                        isValidUserName(freelancers, p);
+
                         cout << setw(121) << "Enter Password: ";
                         cin >> freelancers[i].freelancerPassword;
 
-                        while (freelancers[i].freelancerPassword.length() < 8)
-                        {
-                            cin.ignore();
-                            cout << endl;
-                            setColor(3);
-                            cout << "Password should contain atleast 8 character's." << endl;
-                            setColor(15);
-                            cout << setw(121) << "Enter Password: ";
-                            cin >> freelancers[i].freelancerPassword;
-                        }
-                        cin.ignore();
+                        isValidPassword(freelancers, p);
+
                         cout << endl
                              << endl;
 
@@ -589,38 +582,20 @@ int main()
             if (input == 1)
             {
                 usertype = 0;
-                for (int i = 0; i < 1000; i++)
+                for (int i = 0; i < sizeOfArrays; i++)
                 {
                     if (clients[i].clientUserName == "empty")
                     {
                         cin.ignore(20, '\n');
                         cout << setw(121) << "Enter Username: ";
                         cin >> clients[i].clientUserName;
-
-                        while (clients[i].clientUserName.length() < 3)
-                        {
-
-                            setColor(3);
-                            cout << "UserName should contain atleast 3 character's." << endl;
-                            setColor(15);
-                            cout << setw(121) << "Enter Username: ";
-                            cin >> clients[i].clientUserName;
-                        }
+                        int p = i;
+                        isValidClientUserName(clients, p);
 
                         cout << setw(121) << "Enter Password: ";
                         cin >> clients[i].clientPassword;
-                        cin.ignore();
-                        while (clients[i].clientPassword.length() < 8)
-                        {
 
-                            cout << endl;
-                            setColor(3);
-                            cout << "Password should contain atleast 8 character's." << endl;
-                            setColor(15);
-
-                            cout << setw(121) << "Enter Password: ";
-                            cin >> clients[i].clientPassword;
-                        }
+                        isValidClientPassword(clients, p);
 
                         Cindex++;
                         setColor(3);
@@ -737,7 +712,7 @@ int main()
                 }
                 else if (input == 3)
                 {
-                    customerAddPolicy(headingCustomerPolicy, dataCustomerPolicy);
+                    customerAddPolicy(headingCustomerPolicy, dataCustomerPolicy, sizeOfArrays);
                     // update customer policy function
                 }
                 else if (input == 4)
@@ -793,7 +768,7 @@ int main()
                 }
                 else if (input == 6)
                 {
-                    customerSupport(freelancers, clients);
+                    customerSupport(freelancers, clients, sizeOfArrays);
                     // customer support function
                 }
                 else if (input == 7)
@@ -864,7 +839,7 @@ int main()
                 }
                 else if (input == 5)
                 {
-                    customerPolicy(headingCustomerPolicy, dataCustomerPolicy);
+                    customerPolicy(headingCustomerPolicy, dataCustomerPolicy, sizeOfArrays);
                     /*customerPolicy function */
                 }
 
@@ -932,7 +907,7 @@ int main()
                 }
                 else if (input == 3)
                 {
-                    customerPolicy(headingCustomerPolicy, dataCustomerPolicy);
+                    customerPolicy(headingCustomerPolicy, dataCustomerPolicy, sizeOfArrays);
                     /*customer policy function */
                 }
                 else if (input == 4)
@@ -962,7 +937,7 @@ int main()
 
     } while (input != 0); // change input to 0 to stop the program
 
-    storeData(freelancers, Findex, clients, Cindex, niches, headingCustomerPolicy, dataCustomerPolicy);
+    storeData(freelancers, Findex, clients, Cindex, niches, headingCustomerPolicy, dataCustomerPolicy, sizeOfArrays);
 
     return 0;
 }
@@ -1156,7 +1131,7 @@ void clientStatistic(int Cindex, client clients[])
 }
 
 // show all the detail of customer policy
-void customerPolicy(string headingCustomerPolicy[], string dataCustomerPolicy[])
+void customerPolicy(string headingCustomerPolicy[], string dataCustomerPolicy[], int sizeOfArrays)
 {
     system("cls");
     // ANSI escape code for bold text
@@ -1220,7 +1195,7 @@ void customerPolicy(string headingCustomerPolicy[], string dataCustomerPolicy[])
     setColor(15);
     cout << "We may update this privacy policy periodically. Users will be notified of significant changes, and continued use of the platform constitutes acceptance of the updated policy.\n\n";
 
-    for (int i = 10; i < 1000; i++)
+    for (int i = 10; i < sizeOfArrays; i++)
     {
         // search for more customer policy if added by the admin
         if (headingCustomerPolicy[i] != " ")
@@ -1235,11 +1210,11 @@ void customerPolicy(string headingCustomerPolicy[], string dataCustomerPolicy[])
 }
 
 // allow admin to add more policy
-int customerAddPolicy(string headingCustomerPolicy[], string dataCustomerPolicy[])
+int customerAddPolicy(string headingCustomerPolicy[], string dataCustomerPolicy[], int sizeOfArrays)
 {
     system("cls");
     char option = 'c';
-    customerPolicy(headingCustomerPolicy, dataCustomerPolicy);
+    customerPolicy(headingCustomerPolicy, dataCustomerPolicy, sizeOfArrays);
     setColor(2);
     cout << "------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------" << endl;
     setColor(15);
@@ -1265,7 +1240,7 @@ int customerAddPolicy(string headingCustomerPolicy[], string dataCustomerPolicy[
     }
     if (option == 'Y' || option == 'y')
     {
-        for (int i = 10; i < 1000; i++)
+        for (int i = 10; i < sizeOfArrays; i++)
         {
             if (headingCustomerPolicy[i] == " ")
             {
@@ -1340,12 +1315,12 @@ int removeFreelancerAcc(int &Findex, string user, freelancer freelancers[])
                 freelancers[j].freelancerRating = freelancers[j + 1].freelancerRating;
                 freelancers[j].freelancerEarning = freelancers[j + 1].freelancerEarning;
                 freelancers[j].freelancerNiche = freelancers[j + 1].freelancerNiche;
-                freelancers[i].ratingCount = freelancers[j + 1].ratingCount;
-                freelancers[i].ratingSum = freelancers[j + 1].ratingSum;
+                freelancers[j].ratingCount = freelancers[j + 1].ratingCount;
+                freelancers[j].ratingSum = freelancers[j + 1].ratingSum;
 
                 for (int t = 0; t < 4; t++)
                 {
-                    freelancers[i].freelancerJobSelected[t] = freelancers[j + 1].freelancerJobSelected[t];
+                    freelancers[j].freelancerJobSelected[t] = freelancers[j + 1].freelancerJobSelected[t];
                 }
 
                 for (int n = 0; n < 2; n++)
@@ -1364,7 +1339,7 @@ int removeFreelancerAcc(int &Findex, string user, freelancer freelancers[])
 
             for (int n = 0; n < 4; n++)
             {
-                freelancers[i].freelancerJobSelected[n] = " ";
+                freelancers[Findex - 1].freelancerJobSelected[n] = " ";
             }
 
             for (int n = 0; n < 2; n++)
@@ -1465,7 +1440,7 @@ int removeClientAcc(int &Cindex, string user, client clients[])
 }
 
 // show admin all the queries/suggesstion of freelancers and clients
-void customerSupport(freelancer freelancers[], client clients[])
+void customerSupport(freelancer freelancers[], client clients[], int sizeOfArrays)
 {
     system("cls");
     const string bold = "\033[1m";
@@ -1478,7 +1453,7 @@ void customerSupport(freelancer freelancers[], client clients[])
          << endl;
     setColor(15);
 
-    for (int i = 0; i < 1000; i++)
+    for (int i = 0; i < sizeOfArrays; i++)
     {
         // if freelancer Customer support data is not empty then show the customer support message to the admin
         if (freelancers[i].freelancerCustomerSupport[1] != " ")
@@ -1504,7 +1479,7 @@ void customerSupport(freelancer freelancers[], client clients[])
     cout << "------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------" << endl
          << endl;
     setColor(15);
-    for (int i = 0; i < 1000; i++)
+    for (int i = 0; i < sizeOfArrays; i++)
     {
         // if client Customer support data is not empty then show the customer support message to the admin
         if (clients[i].clientCustomerSupport[1] != "empty")
@@ -1926,10 +1901,10 @@ void freelancerWorkSubmit(int Findex, int Cindex, string freelancerLogin[1][5], 
                                 }
                             }
                         }
-                        for (int p = 0; p < 4; p++)
-                        {
-                            freelancers[i].freelancerJobSelected[p] = " ";
-                        }
+                        // for (int p = 0; p < 4; p++)
+                        // {
+                        //     freelancers[i].freelancerJobSelected[p] = " ";
+                        // }
                         break;
                     }
                 }
@@ -2209,6 +2184,11 @@ void pendingRating(int Findex, int Cindex, string clientLogin[1][3], freelancer 
                             cout << "Rating: " << fixed << setprecision(1) << ratingValue << " has been given to freelancer " << clients[i].rating[m][0] << endl;
                             setColor(15);
 
+                            for (int q = 0; q < 4; q++)
+                            {
+                                freelancers[p].freelancerJobSelected[q] = " ";
+                            }
+
                             // once the rating has been given delete this job data
                             clients[i].clientJobDescription[m] = "empty";
                             clients[i].clientPayment[m] = 0;
@@ -2236,6 +2216,94 @@ void pendingRating(int Findex, int Cindex, string clientLogin[1][3], freelancer 
 }
 
 /////////////////////////////////CLIENT FUNCTION END //////////////////////////////
+
+bool isValidClientUserName(client clients[], int p)
+{
+    bool flag = false;
+
+    while (flag == false)
+    {
+        while (clients[p].clientUserName.length() < 3)
+        {
+            cin.ignore(100, '\n');
+            setColor(3);
+            cout << "UserName should contain atleast 3 character's." << endl;
+            setColor(15);
+            cout << setw(121) << "Enter Username: ";
+            cin >> clients[p].clientUserName;
+        }
+        flag = true;
+        cin.ignore(100, '\n');
+    }
+    return flag;
+}
+
+bool isValidUserName(freelancer freelancers[], int p)
+{
+    bool flag = false;
+
+    while (flag == false)
+    {
+        while (freelancers[p].freelancerUserName.length() < 3)
+        {
+            cin.ignore(100, '\n');
+            setColor(3);
+            cout << "UserName should contain atleast 3 character's." << endl;
+            setColor(15);
+            cout << setw(121) << "Enter Username: ";
+            cin >> freelancers[p].freelancerUserName;
+        }
+        flag = true;
+        cin.ignore(100, '\n');
+    }
+    return flag;
+}
+
+bool isValidPassword(freelancer freelancers[], int p)
+{
+    bool flag = false;
+
+    while (flag == false)
+    {
+        while (freelancers[p].freelancerPassword.length() < 8)
+        {
+
+            cin.ignore(100, '\n');
+            cout << endl;
+            setColor(3);
+            cout << "Password should contain atleast 8 character's." << endl;
+            setColor(15);
+            cout << setw(121) << "Enter Password: ";
+            cin >> freelancers[p].freelancerPassword;
+        }
+        flag = true;
+        cin.ignore(100, '\n');
+    }
+    return flag;
+}
+
+bool isValidClientPassword(client clients[], int p)
+{
+    bool flag = false;
+
+    while (flag == false)
+    {
+        while (clients[p].clientPassword.length() < 8)
+        {
+            cin.ignore(100, '\n');
+            cout << endl;
+            setColor(3);
+            cout << "Password should contain atleast 8 character's." << endl;
+            setColor(15);
+
+            cout << setw(121) << "Enter Password: ";
+            cin >> clients[p].clientPassword;
+        }
+        flag = true;
+        cin.ignore(100, '\n');
+    }
+    return flag;
+}
 
 // load all the data from files
 void loadData(freelancer freelancers[], int &Findex, client clients[], int &Cindex, string niches[], string headingCustomerPolicy[], string dataCustomerPolicy[])
@@ -2510,7 +2578,7 @@ void loadData(freelancer freelancers[], int &Findex, client clients[], int &Cind
 }
 
 // store all the data to files
-void storeData(freelancer freelancers[], int Findex, client clients[], int Cindex, string niches[], string headingCustomerPolicy[], string dataCustomerPolicy[])
+void storeData(freelancer freelancers[], int Findex, client clients[], int Cindex, string niches[], string headingCustomerPolicy[], string dataCustomerPolicy[], int sizeOfArrays)
 {
     ofstream fout;
 
@@ -2586,7 +2654,7 @@ void storeData(freelancer freelancers[], int Findex, client clients[], int Cinde
     // Store Customer Policies
     fout.open("customerPolicy.txt");
 
-    for (int i = 10; i < 1000; ++i)
+    for (int i = 10; i < sizeOfArrays; ++i)
     {
         if (headingCustomerPolicy[i] != " ")
         {
@@ -2604,9 +2672,9 @@ void storeData(freelancer freelancers[], int Findex, client clients[], int Cinde
     cout << "Data stored s/uccessfully.\n";
 }
 
-void initilizeData(freelancer freelancers[], client clients[], string headingCustomerPolicy[1000], string dataCustomerPolicy[1000], string niches[100], string freelancerLogin[][5], string clientLogin[][3])
+void initilizeData(freelancer freelancers[], client clients[], string headingCustomerPolicy[1000], string dataCustomerPolicy[1000], string niches[100], string freelancerLogin[][5], string clientLogin[][3], int sizeOfArrays)
 {
-    for (int i = 0; i < 1000; i++)
+    for (int i = 0; i < sizeOfArrays; i++)
     {
         freelancers[i].freelancerUserName = " ";
         freelancers[i].freelancerPassword = " ";

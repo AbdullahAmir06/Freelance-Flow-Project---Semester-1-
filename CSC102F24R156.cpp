@@ -131,7 +131,6 @@ bool isValidClientPassword(client clients[], int p);
 
 int main()
 {
-
     string clientLogin[1][3];
     string freelancerLogin[1][5];
 
